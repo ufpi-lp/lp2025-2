@@ -1,6 +1,6 @@
-# lp2024-2
+# lp2025-1
 
-Turma de Laboratório de Programação UFPI 2024.2 (Departamento de Computação)
+Turma de Laboratório de Programação UFPI 2025.1 (Departamento de Computação)
 
 [Variáveis, Tipos e Operações](https://github.com/armandossrecife/lp2024-2/blob/main/docs/variaveis.md)
 
