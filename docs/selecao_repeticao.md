@@ -185,7 +185,18 @@ print(f"A soma dos números pares é: {soma}")
 2. **Compreensão de listas:**  
    Python oferece uma sintaxe concisa para criar listas com base em loops.
 
-   Exemplo:
+   Exemplo1:
+   ```python
+   for x in range(10):
+       print(x)
+   ```
+    Cria uma lista de inteiros com os 10 elementos
+   ```python
+   lista_10_inteiros = [x for x in range(10)]
+   print(lista_10_inteiros) # Saida: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+   ```
+
+   Exemplo2:
    ```python
    pares = [x for x in range(10) if x % 2 == 0]
    print(pares)  # Saída: [0, 2, 4, 6, 8]
