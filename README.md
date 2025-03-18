@@ -4,7 +4,7 @@ Turma de Laboratório de Programação UFPI 2025.1 (Departamento de Computação
 
 [Variáveis, Tipos e Operações](https://github.com/armandossrecife/lp2024-2/blob/main/docs/variaveis.md)
 
-[Estruturas de Seleção e Repetição em Python](https://github.com/armandossrecife/lp2024-2/blob/main/docs/selecao_repeticao.md)
+[Estruturas de Seleção e Repetição em Python](https://github.com/ufpi-lp/lp2025-1/blob/main/docs/selecao_repeticao.md)
 
 [Strings](https://github.com/armandossrecife/lp2024-2/blob/main/docs/strings.md)
 
