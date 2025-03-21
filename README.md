@@ -2,6 +2,8 @@
 
 Turma de Laboratório de Programação UFPI 2025.1 (Departamento de Computação)
 
+## Introdução a Linguagem de Programação Python
+
 [Variáveis, Tipos e Operações](https://github.com/armandossrecife/lp2024-2/blob/main/docs/variaveis.md)
 
 [Estruturas de Seleção e Repetição em Python](https://github.com/ufpi-lp/lp2025-1/blob/main/docs/selecao_repeticao.md)
@@ -53,3 +55,7 @@ Introdução a manipulação de imagens usando a bilioteca [pillow](https://pill
 ## Carregando o ambiente de testes
 
 Você pode acessar e testar os códigos do repositório usando o VS Code online seguindos as instruções deste [link](https://github.com/armandossrecife/lp2024-2/blob/main/docs/acesso_vscode.md). 
+
+## Comparando Java, C e Python
+
+Uma breve comparação entre Java, C e Python neste [link](https://github.com/ufpi-lp/lp2025-1/blob/main/docs/java_c_python.md)
