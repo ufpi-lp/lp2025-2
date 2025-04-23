@@ -1,11 +1,8 @@
-Aqui está a versão do seu conteúdo formatada para **ASCII** e **UTF-8**, sincronizada com Python:
+**ASCII** e **UTF-8** em Python:
 
 ---
 
 ### **Tabela ASCII e Formatação UTF-8 em Python**  
-*(Conversão do original em C para Python)*  
-
----
 
 ## **O que é a Tabela ASCII?**  
 A Tabela ASCII (*American Standard Code for Information Interchange*) é um padrão que define a representação numérica de caracteres (letras, números, símbolos e controles). Cada caractere é associado a um número entre **0 e 127**.  
