@@ -149,17 +149,18 @@ if __name__ == "__main__":
 ```
 
 ### **5. Exercícios Propostos**  
-1. **Buscar pessoa por CPF:**  
+
+1. **Validação de CPF:**  
+   Verifique se o CPF tem 11 dígitos numéricos antes de cadastrar.  
+
+2. **Buscar pessoa por CPF:**  
    Implemente uma função que recebe um CPF e retorna os dados da pessoa.  
 
-2. **Editar dados:**  
+3. **Editar dados:**  
    Permita que o usuário atualize o nome ou telefone de uma pessoa cadastrada.  
 
-3. **Excluir pessoa:**  
+4. **Excluir pessoa:**  
    Adicione uma função para remover uma pessoa do dicionário.  
-
-4. **Validação de CPF:**  
-   Verifique se o CPF tem 11 dígitos numéricos antes de cadastrar.  
 
 ### **6. Considerações Finais**  
 - **Vantagens do código:**  
