@@ -19,7 +19,7 @@ Criar um programa em Python para cadastrar, listar, salvar e carregar dados de p
 - Armazenam pares **chave-valor**.  
 - Exemplo:  
   ```python
-  pessoa = {"cpf": "123.456.789-00", "nome": "Ana", "telefone": "99999-9999"}
+  pessoa = {"123.456.789-00": {"nome": "Ana", "telefone": "99999-9999"}}
   ```
 
 #### **Arquivos Texto**  
