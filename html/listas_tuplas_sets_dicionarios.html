@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apresentação — Listas, Tuplas e Sets em Python (Lab CC)</title>
+
+  <!-- Reveal.js core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <!-- Theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+
+  <!-- Highlight.js theme for code syntax highlighting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      --r-heading-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .reveal pre code {
+      font-size: 1.05em;     /* larger code */
+      line-height: 1.25;
+      tab-size: 4;
+    }
+    .reveal section h1, .reveal section h2, .reveal section h3 { letter-spacing: 0.2px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .8em; opacity: .85; }
+    .tight code { font-size: .95em; }
+    table { width: 100%; font-size: .8em; border-collapse: collapse; }
+    th, td { border: 1px solid #666; padding: 6px 10px; }
+    th { background: rgba(255,255,255,.06); }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: rgba(255,255,255,.12); font-size: .8em; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE -->
+      <section>
+        <h1>Listas, Tuplas e Sets em Python</h1>
+        <p>Laboratório de Programação — Ciência da Computação • UFPI</p>
+        <p class="note">Sintaxe básica, características, exemplos práticos e usos comuns — com <span class="badge">syntax highlighting</span></p>
+      </section>
+
+      <!-- LISTAS -->
+      <section>
+        <section>
+          <h2>Listas em Python — Introdução</h2>
+          <ul>
+            <li><strong>Coleções ordenadas</strong> de itens</li>
+            <li><strong>Mutáveis</strong> e <strong>heterogêneas</strong></li>
+            <li>Estrutura versátil e muito utilizada</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Listas — Criando</h3>
+<pre><code class="language-python"># Lista vazia
+minha_lista = []
+
+# Lista com elementos
+numeros = [1, 2, 3, 4, 5]
+misturada = [1, "texto", True, 3.14]</code></pre>
+        </section>
+
+        <section>
+          <h3>Listas — Acessando elementos</h3>
+<pre><code class="language-python">frutas = ["maçã", "banana", "laranja"]
+
+# Acesso por índice (começa em 0)
+primeira = frutas[0]    # "maçã"
+ultima = frutas[-1]     # "laranja" (índice negativo)</code></pre>
+        </section>
+
+        <section>
+          <h3>Listas — Características</h3>
+          <ol>
+            <li>Ordenadas (mantêm ordem de inserção)</li>
+            <li>Mutáveis (alteráveis após criar)</li>
+            <li>Indexáveis (acesso rápido por índice)</li>
+            <li>Dinâmicas (crescem/diminuem)</li>
+            <li>Aninháveis (podem conter outras listas)</li>
+          </ol>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Listas — Modificar &amp; Inserir</h3>
+<pre><code class="language-python">cores = ["vermelho", "verde", "azul"]
+cores[1] = "amarelo"      # substitui "verde"
+
+cores.append("roxo")      # adiciona ao final
+cores.insert(1, "laranja")# insere na posição 1</code></pre>
+          </div>
+          <div>
+            <h3>Listas — Remover</h3>
+<pre><code class="language-python">cores.remove("azul")      # remove por valor
+cor_removida = cores.pop(2)  # remove por índice e retorna
+del cores[0]              # remove por índice (sem retorno)</code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h3>Listas — Fatiamento (slicing)</h3>
+<pre><code class="language-python">numeros = [0,1,2,3,4,5,6,7,8,9]
+
+# lista[início:fim:passo]
+primeiros = numeros[0:3]   # [0, 1, 2]
+pares     = numeros[0:10:2]# [0, 2, 4, 6, 8]
+reverso   = numeros[::-1]  # [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]</code></pre>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Listas — Iteração</h3>
+<pre><code class="language-python"># Loop direto
+for fruta in ["maçã", "banana", "laranja"]:
+    print(fruta)
+
+# Loop com índice
+frutas = ["maçã", "banana", "laranja"]
+for indice, fruta in enumerate(frutas):
+    print(f"Índice {indice}: {fruta}")</code></pre>
+          </div>
+          <div>
+            <h3>Listas — Métodos úteis</h3>
+<pre><code class="language-python">lista = [3, 1, 4, 1, 5, 9, 2]
+
+tamanho  = len(lista)      # 7
+contagem = lista.count(1)  # 2
+
+lista.sort()               # [1, 1, 2, 3, 4, 5, 9]
+lista.sort(reverse=True)   # [9, 5, 4, 3, 2, 1, 1]
+
+lista.reverse()            # inverte in-place</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Listas — Operações</h3>
+<pre><code class="language-python">a = [1, 2, 3]
+b = [4, 5, 6]
+
+c = a + b       # concatenação
+d = a * 2       # repetição
+existe = 3 in a # verificação</code></pre>
+          </div>
+          <div>
+            <h3>Usos — Pilhas, Filas, Compreensão</h3>
+<pre><code class="language-python"># Pilha (LIFO)
+pilha = []
+pilha.append("item")
+item = pilha.pop()
+
+# Fila (FIFO)
+from collections import deque
+fila = deque(["a", "b", "c"])
+fila.append("d")
+primeiro = fila.popleft()
+
+# Compreensão de listas
+quadrados = [x**2 for x in range(10) if x % 2 == 0]</code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h3>Listas — Exemplo prático</h3>
+<pre><code class="language-python"># Gerenciador de tarefas simples
+tarefas = []
+
+def adicionar_tarefa(descricao, prioridade=3):
+    tarefas.append({"descricao": descricao, "prioridade": prioridade})
+
+def listar_tarefas():
+    tarefas_ordenadas = sorted(tarefas, key=lambda x: x["prioridade"])
+    print("Lista de Tarefas:")
+    for i, t in enumerate(tarefas_ordenadas, 1):
+        print(f"{i}. {t['descricao']} (Prioridade: {t['prioridade']})")
+
+adicionar_tarefa("Estudar Python", 1)
+adicionar_tarefa("Fazer compras", 3)
+adicionar_tarefa("Ler livro", 2)
+listar_tarefas()</code></pre>
+        </section>
+      </section>
+
+      <!-- TUPLAS -->
+      <section>
+        <section>
+          <h2>Tuplas em Python — Introdução</h2>
+          <ul>
+            <li>Parecidas com listas, porém <strong>imutáveis</strong></li>
+            <li>Ideais para dados constantes</li>
+            <li>Frequentemente mais eficientes em memória</li>
+          </ul>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Tuplas — Criando</h3>
+<pre><code class="language-python">minha_tupla = ()           # vazia
+coordenadas = (10, 20)
+cores = ("vermelho", "verde", "azul")
+tupla_unica = ("único",)   # vírgula obrigatória
+ponto = 30, 40             # packing sem parênteses</code></pre>
+          </div>
+          <div>
+            <h3>Tuplas — Acessando</h3>
+<pre><code class="language-python">dados = ("João", 25, "Engenheiro")
+nome  = dados[0]   # "João"
+idade = dados[-2]  # 25</code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h3>Tuplas — Imutabilidade</h3>
+<pre><code class="language-python">lista = [1, 2, 3]
+lista[1] = 99      # ok
+
+tupla = (1, 2, 3)
+tupla[1] = 99      # TypeError: não é possível alterar</code></pre>
+          <p class="note">Vantagens: segurança contra alterações, chaves de dicionário, desempenho.</p>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Tuplas — Operações</h3>
+<pre><code class="language-python">tupla1 = (1, 2, 3)
+tupla2 = (4, 5, 6)
+
+tupla3 = tupla1 + tupla2     # concatenação
+tupla_rep = tupla1 * 2       # repetição
+
+numeros = (0,1,2,3,4,5,6,7,8,9)
+primeiros = numeros[0:3]
+pares = numeros[0:10:2]
+rev = numeros[::-1]</code></pre>
+          </div>
+          <div>
+            <h3>Tuplas — Métodos &amp; Desempacotar</h3>
+<pre><code class="language-python">t = (1,2,3,2,4,2)
+contagem = t.count(2)  # 3
+posicao  = t.index(3)  # 2
+tamanho  = len(t)      # 6
+
+# Desempacotamento
+x, y = (10, 20)
+a, b = 5, 10
+a, b = b, a
+
+valores = (1, 2, 3, 4, 5)
+primeiro, *meio, ultimo = valores</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Tuplas — Como chaves de dicionário</h3>
+<pre><code class="language-python">coordenadas_pixels = {
+    (0, 0): "preto",
+    (1, 0): "branco",
+    (0, 1): "cinza"
+}
+print(coordenadas_pixels[(1, 0)])  # "branco"</code></pre>
+          </div>
+          <div>
+            <h3>Tuplas — Retorno múltiplo</h3>
+<pre><code class="language-python">def calcular_estatisticas(numeros):
+    media = sum(numeros) / len(numeros)
+    return media, max(numeros), min(numeros)
+
+media, maximo, minimo = calcular_estatisticas([10,20,30,40,50])
+print(media, maximo, minimo)</code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h3>Tuplas vs Listas</h3>
+          <table>
+            <thead>
+              <tr><th>Característica</th><th>Tuplas</th><th>Listas</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Mutabilidade</td><td>Imutável</td><td>Mutável</td></tr>
+              <tr><td>Sintaxe</td><td><code>()</code> ou sem parênteses</td><td><code>[]</code></td></tr>
+              <tr><td>Desempenho</td><td>Geralmente mais rápido</td><td>Mais lento</td></tr>
+              <tr><td>Uso como chave</td><td>Pode</td><td>Não</td></tr>
+              <tr><td>Métodos</td><td>count, index</td><td>muitos</td></tr>
+              <tr><td>Casos de uso</td><td>Dados constantes</td><td>Dados mutáveis</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h3>Tuplas — Exemplo prático</h3>
+<pre><code class="language-python"># Sistema de coordenadas geográficas
+def calcular_distancia(ponto1, ponto2):
+    x1, y1 = ponto1
+    x2, y2 = ponto2
+    return ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+
+ponto_a = (3, 4)
+ponto_b = (6, 8)
+distancia = calcular_distancia(ponto_a, ponto_b)
+print(f"Distância: {distancia:.2f}")
+
+locais = {
+    (40.7128, -74.0060): "Nova York",
+    (51.5074,  -0.1278): "Londres",
+    (35.6762, 139.6503): "Tóquio"
+}
+print(locais[(40.7128, -74.0060)])</code></pre>
+        </section>
+      </section>
+
+      <!-- SETS -->
+      <section>
+        <section>
+          <h2>Sets (Conjuntos) em Python — Introdução</h2>
+          <ul>
+            <li>Elementos <strong>únicos</strong> e <strong>não ordenados</strong></li>
+            <li><strong>Mutáveis</strong> (mas elementos devem ser <em>imutáveis</em>)</li>
+            <li>Excelentes para operações de conjunto e verificação de membro</li>
+          </ul>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Sets — Criando &amp; Convertendo</h3>
+<pre><code class="language-python">meu_set = {1, 2, 3, "Python", "programação"}
+set_vazio = set()   # {} seria dicionário
+
+numeros = {1, 2, 2, 3, 3, 3}
+print(numeros)  # {1, 2, 3}
+
+lista = [1, 2, 2, 3, 3, 3]
+set_unico = set(lista)      # {1, 2, 3}
+palavra = set("abacaxi")    # {'a','b','c','x','i'}</code></pre>
+          </div>
+          <div>
+            <h3>Sets — Adicionar &amp; Remover</h3>
+<pre><code class="language-python">linguagens = {"Python", "Java"}
+linguagens.add("C++")
+linguagens.update(["JavaScript", "Ruby"])
+
+linguagens.remove("Java")   # erro se não existir
+linguagens.discard("PHP")   # não erra se não existir
+x = linguagens.pop()        # remove elemento arbitrário
+linguagens.clear()</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Sets — Verificação e tamanho</h3>
+<pre><code class="language-python">numeros = {1, 2, 3, 4, 5}
+if 3 in numeros:
+    print("3 está no conjunto")
+tamanho = len(numeros)</code></pre>
+          </div>
+          <div>
+            <h3>Sets — Operações de conjunto</h3>
+<pre><code class="language-python">A = {1, 2, 3}
+B = {3, 4, 5}
+
+uniao        = A | B                 # {1,2,3,4,5}
+intersecao   = A & B                 # {3}
+diferenca    = A - B                 # {1,2}
+dif_sim      = A ^ B                 # {1,2,4,5}</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Sets — Relações</h3>
+<pre><code class="language-python">X = {1, 2, 3}
+Y = {1, 2}
+Z = {4, 5}
+
+Y.issubset(X)    # True
+X.issuperset(Y)  # True
+X.isdisjoint(Z)  # True</code></pre>
+          </div>
+          <div>
+            <h3>Sets — Comuns &amp; Filtragem</h3>
+<pre><code class="language-python"># Remover duplicatas
+lista_dup = [1,1,2,2,3,3,3,4]
+unicos = list(set(lista_dup))  # ordem pode variar
+
+# Interseção entre listas
+lista1 = [1,2,3,4,5]
+lista2 = [4,5,6,7,8]
+comuns = set(lista1) & set(lista2)  # {4, 5}</code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h3>Sets — Exemplo prático</h3>
+<pre><code class="language-python">clientes_jan = {"Ana", "João", "Maria", "Carlos"}
+clientes_fev = {"João", "Maria", "Pedro", "Ana"}
+
+fieis = clientes_jan & clientes_fev   # em ambos
+novos  = clientes_fev - clientes_jan  # apenas em fev
+todos  = clientes_jan | clientes_fev  # união</code></pre>
+        </section>
+      </section>
+
+      <!-- ENCERRAMENTO -->
+      <section>
+        <h2>Conclusões &amp; Dicas</h2>
+        <ul>
+          <li><strong>Listas</strong>: coleções mutáveis e ordenadas — ótimas para processamento geral.</li>
+          <li><strong>Tuplas</strong>: sequências imutáveis — ideais para dados constantes e chaves.</li>
+          <li><strong>Sets</strong>: conjuntos não ordenados e únicos — perfeitos para pertinência &amp; operações de conjunto.</li>
+        </ul>
+        <p class="note">Escolha a estrutura conforme a necessidade de <em>mutabilidade</em>, <em>ordem</em> e <em>unicidade</em>.</p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <!-- Reveal.js highlight plugin (bundles highlight.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      plugins: [ RevealHighlight ]
+    });
+  </script>
+</body>
+</html>
