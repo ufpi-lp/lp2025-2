@@ -59,3 +59,7 @@ Você pode acessar e testar os códigos do repositório usando o VS Code online 
 ## Comparando Java, C e Python
 
 Uma breve comparação entre Java, C e Python neste [link](https://github.com/ufpi-lp/lp2025-1/blob/main/docs/java_c_python.md)
+
+## Site da disciplina
+
+Disponível em https://ufpi-lp.github.io/lp2025-2
