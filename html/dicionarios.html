@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apresentação — Dicionários (dict) em Python (Lab CC)</title>
+
+  <!-- Reveal.js core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <!-- Light Theme (same as previous light deck) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+
+  <!-- Highlight.js theme for code syntax highlighting (light) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      --r-heading-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .reveal pre code {
+      font-size: 1.05em;
+      line-height: 1.25;
+      tab-size: 4;
+    }
+    .reveal section h1, .reveal section h2, .reveal section h3 { letter-spacing: 0.2px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .85em; opacity: .9; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: rgba(0,0,0,.06); font-size: .8em; }
+    table { width: 100%; font-size: .9em; border-collapse: collapse; }
+    th, td { border: 1px solid #bbb; padding: 6px 10px; }
+    th { background: #f6f8fa; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE -->
+      <section>
+        <h1>Dicionários (dict) em Python</h1>
+        <p>Laboratório de Programação — Ciência da Computação • UFPI</p>
+        <p class="note">Sintaxe básica, características, exemplos práticos e usos comuns — com <span class="badge">syntax highlighting</span></p>
+      </section>
+
+      <!-- INTRO -->
+      <section>
+        <section>
+          <h2>O que são Dicionários?</h2>
+          <ul>
+            <li>Estruturas que armazenam <strong>pares chave→valor</strong>.</li>
+            <li><strong>Chaves</strong> devem ser únicas e imutáveis (hashable): <em>str</em>, <em>int</em>, <em>tuple</em>…</li>
+            <li><strong>Valores</strong> podem ser de qualquer tipo (incluindo listas, dicts, etc.).</li>
+            <li>Desde o Python 3.7+, <strong>preservam ordem de inserção</strong>.</li>
+          </ul>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Criando dicionários</h3>
+<pre><code class="language-python">meu_dicionario = {"nome": "João", "idade": 30, "cidade": "São Paulo"}
+vazio = {}
+
+# dict() com pares e iteráveis
+dados = dict(nome="Maria", idade=25)
+pares = dict([("a", 1), ("b", 2)])</code></pre>
+          </div>
+          <div>
+            <h3>Acessando valores</h3>
+<pre><code class="language-python">pessoa = {"nome": "João", "idade": 30}
+nome = pessoa["nome"]      # KeyError se "nome" não existir
+idade = pessoa.get("idade")# None (ou default) se não existir
+
+# Valor padrão com get()
+telefone = pessoa.get("telefone", "sem telefone")</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Modificando &amp; adicionando</h3>
+<pre><code class="language-python">pessoa = {"nome": "João", "idade": 30}
+pessoa["idade"] = 31              # modifica
+pessoa["profissao"] = "Programador" # adiciona novo par
+
+# update() mescla/atualiza
+pessoa.update({"cidade": "São Paulo", "idade": 32})</code></pre>
+          </div>
+          <div>
+            <h3>Removendo pares</h3>
+<pre><code class="language-python">pessoa = {"nome": "João", "idade": 30, "cidade": "SP"}
+
+del pessoa["cidade"]     # remove pela chave (KeyError se não existir)
+
+valor = pessoa.pop("idade", None)  # remove e retorna (ou default)
+chave, valor = pessoa.popitem()    # remove o último par inserido
+
+pessoa.clear()            # esvazia o dicionário</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- ITERAÇÃO & MÉTODOS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Iterando</h2>
+<pre><code class="language-python">usuario = {"nome": "Maria", "idade": 25, "email": "maria@example.com"}
+
+for chave in usuario:
+    print(chave)               # chaves
+
+for valor in usuario.values():
+    print(valor)               # valores
+
+for chave, valor in usuario.items():
+    print(chave, valor)        # pares (chave, valor)</code></pre>
+          </div>
+          <div>
+            <h2>Métodos úteis</h2>
+<pre><code class="language-python">d = {"a": 1, "b": 2}
+d.keys()      # visão dinâmica de chaves
+d.values()    # visão de valores
+d.items()     # visão de pares
+
+d.get("x", 0) # valor padrão
+d.setdefault("c", 3)  # define se não existir
+
+outro = {"b": 22, "d": 4}
+d.update(outro)  # mescla/atualiza chaves
+
+len(d)        # quantidade de pares
+"x" in d      # teste de existência de CHAVE</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Dict comprehension</h3>
+<pre><code class="language-python">palavras = ["python", "dados", "laboratorio"]
+tamanhos = {p: len(p) for p in palavras}  # {'python':6, ...}
+
+# Inverter chaves/valores (cuidado com duplicatas)
+inverso = {v: k for k, v in {"a":1, "b":2}.items()}</code></pre>
+          </div>
+          <div>
+            <h3>Estruturas aninhadas</h3>
+<pre><code class="language-python"># Lista de dicionários
+alunos = [
+    {"nome": "Ana", "nota": 9.1},
+    {"nome": "Rui", "nota": 7.8},
+]
+
+# Dicionário de listas
+turma = {
+    "A": ["Ana", "Bea"],
+    "B": ["Rui", "Lia"],
+}</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- EXEMPLOS COMPLETOS -->
+      <section>
+        <section>
+          <h2>Exemplo completo — Contagem de palavras</h2>
+<pre><code class="language-python">texto = "Python é uma linguagem de programação poderosa e versátil"
+contagem_palavras = {}
+
+for palavra in texto.split():
+    contagem_palavras[palavra] = contagem_palavras.get(palavra, 0) + 1
+
+print(contagem_palavras)</code></pre>
+        </section>
+
+        <section>
+          <h3>Contagem de letras</h3>
+<pre><code class="language-python">texto = "banana"
+contagem_letras = {}
+for letra in texto:
+    contagem_letras[letra] = contagem_letras.get(letra, 0) + 1
+
+print(contagem_letras)  # {'b': 1, 'a': 3, 'n': 2}</code></pre>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Tradutor simples</h3>
+<pre><code class="language-python">dicionario_en_pt = {"hello": "olá", "world": "mundo"}
+print(dicionario_en_pt["hello"])   # olá</code></pre>
+          </div>
+          <div>
+            <h3>Cache (memoization)</h3>
+<pre><code class="language-python">cache = {}
+
+def caro(n):
+    if n in cache:
+        return cache[n]
+    # simulação de cálculo caro
+    r = n * n
+    cache[n] = r
+    return r</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Representando grafos (adjacência)</h3>
+<pre><code class="language-python">grafo = {
+    "A": ["B", "C"],
+    "B": ["A", "D"],
+    "C": ["A"],
+    "D": ["B"]
+}</code></pre>
+          </div>
+          <div>
+            <h3>Configurações (settings)</h3>
+<pre><code class="language-python">config = {
+  "idioma": "pt-BR",
+  "tema": "claro",
+  "notificacoes": True
+}</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- BOAS PRÁTICAS E USOS -->
+      <section>
+        <section>
+          <h2>Boas práticas &amp; armadilhas</h2>
+          <ul>
+            <li><strong>Chaves imutáveis</strong>: use <em>str</em>, <em>int</em>, <em>tuple</em> (evite listas/dicts como chave).</li>
+            <li>Evite <code>KeyError</code>: prefira <code>get()</code>, <code>in</code> ou <code>setdefault()</code>.</li>
+            <li><strong>Ordem preservada</strong> (3.7+), mas não use dict para ordenação — prefira <code>sorted(d.items())</code>.</li>
+            <li>Cópias: <code>copy()</code> é rasa; para profundidade use <code>copy.deepcopy()</code>.</li>
+            <li>Merge moderno (3.9+): <code>novo = d1 | d2</code> e <code>d1 |= d2</code>.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Usos comuns de dict</h2>
+          <ul>
+            <li><strong>Armazenar dados estruturados</strong> (usuários, produtos, configs).</li>
+            <li><strong>Contadores/estatísticas</strong> (palavras, letras, eventos).</li>
+            <li><strong>Grafos/Mapas</strong> (listas de adjacência).</li>
+            <li><strong>Cache</strong> de resultados caros e dados de API.</li>
+            <li><strong>Tradução/lookup</strong> chave→valor rápido.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Cheat Sheet</h2>
+<pre><code class="language-python"># Criar: {}, dict(), dict(k=v), dict(lista_de_pares)
+# Acesso: d[k]; d.get(k, default); k in d
+# Inserir/Atualizar: d[k]=v; d.update({k:v}); d |= outro
+# Remover: del d[k]; d.pop(k, default); d.popitem(); d.clear()
+# Iterar: for k in d; for v in d.values(); for k,v in d.items()
+# Views: d.keys(), d.values(), d.items() (dinâmicas)
+# Comprehension: {k: f(v) for k, v in pares if cond}
+# Cópias: d.copy() (rasa); copy.deepcopy(d) (profunda)</code></pre>
+        </section>
+
+        <section>
+          <h2>Conclusões &amp; Dicas</h2>
+          <ul>
+            <li><strong>Dict</strong> = mapeamento flexível e eficiente (chave→valor).</li>
+            <li>Escolha chaves imutáveis e autoexplicativas.</li>
+            <li>Use métodos como <code>get</code>, <code>setdefault</code> e <code>update</code> a seu favor.</li>
+            <li>Combine com listas/tuplas para modelar dados complexos.</li>
+          </ul>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <!-- Reveal.js highlight plugin (bundles highlight.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      plugins: [ RevealHighlight ]
+    });
+  </script>
+</body>
+</html>

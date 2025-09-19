@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apresentação — Arquivos em Python (Lab CC)</title>
+
+  <!-- Reveal.js core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <!-- Light Theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+
+  <!-- Highlight.js (syntax highlighting for code) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      --r-heading-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .reveal pre code {
+      font-size: 1.05em;
+      line-height: 1.25;
+      tab-size: 4;
+    }
+    .reveal section h1, .reveal section h2, .reveal section h3 { letter-spacing: 0.2px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .85em; opacity: .9; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: rgba(0,0,0,.06); font-size: .8em; }
+    table { width: 100%; font-size: .9em; border-collapse: collapse; }
+    th, td { border: 1px solid #bbb; padding: 6px 10px; }
+    th { background: #f6f8fa; }
+    .small code { font-size: .9em; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE -->
+      <section>
+        <h1>Arquivos em Python</h1>
+        <p>Laboratório de Programação — Ciência da Computação • UFPI</p>
+        <p class="note">Conceitos, tipos (texto × binário), leitura/gravação, modos, <code>with</code>, contagem e exemplos práticos — com <span class="badge">syntax highlighting</span></p>
+      </section>
+
+      <!-- CONCEITOS GERAIS -->
+      <section>
+        <section>
+          <h2>O que é um arquivo?</h2>
+          <ul>
+            <li>Coleção de informações digitalizadas armazenadas em um dispositivo (HDD, SSD, SD, nuvem).</li>
+            <li>Possui <strong>nome</strong> e <strong>extensão</strong> (indica o tipo e software associado).</li>
+            <li>Usado para <strong>persistir</strong> dados e compartilhá-los entre programas/sistemas.</li>
+          </ul>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Texto × Binário</h3>
+            <ul>
+              <li><strong>Texto</strong>: legível, codificações como ASCII/UTF‑8 (.txt, .csv, .json, .html, .py).</li>
+              <li><strong>Binário</strong>: bytes “brutos”, não legíveis (.jpeg, .mp3, .mp4, .otf, executáveis).</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Sistema de Arquivos (FS)</h3>
+            <ul>
+              <li>Organiza, nomeia, armazena e manipula arquivos.</li>
+              <li>Ex.: FAT/NTFS (Windows), ext2/3/4 (Linux/Android), HFS/APFS (macOS/iOS).</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h3>Fluxo básico de leitura</h3>
+          <ul>
+            <li>SO solicita leitura ao controlador de disco → dados vão à RAM.</li>
+            <li>CPU processa; controlador de vídeo envia ao display.</li>
+          </ul>
+          <p class="note">Visão simplificada da cadeia HW/SO durante uma leitura.</p>
+        </section>
+      </section>
+
+      <!-- PYTHON: OPEN/READ/CLOSE -->
+      <section>
+        <section>
+          <h2>A função <code>open()</code> em Python</h2>
+          <ul>
+            <li>Cria um <em>objeto arquivo</em> para leitura/gravação.</li>
+            <li>Assinatura (doc oficial): <code>open(file, mode='r', ...)</code></li>
+            <li>Feche o arquivo após o uso: <code>f.close()</code> — ou prefira <code>with</code>.</li>
+          </ul>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Ler tudo de uma vez</h3>
+<pre><code class="language-python">meu_arquivo = open('nomes.txt', mode='r')
+conteudo = meu_arquivo.read()
+print(conteudo)
+meu_arquivo.close()</code></pre>
+          </div>
+          <div>
+            <h3>Ler linha a linha</h3>
+<pre><code class="language-python">meu_arquivo = open('nomes.txt', mode='r')
+for linha in meu_arquivo:
+    print(linha)          # inclui '\n'
+meu_arquivo.close()
+
+# Sem pular linha extra:
+meu_arquivo = open('nomes.txt', mode='r')
+for linha in meu_arquivo:
+    print(linha, end='')  # remove a quebra extra
+meu_arquivo.close()</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Contagens úteis</h3>
+<pre><code class="language-python"># caracteres
+with open('nomes.txt', 'r') as f:
+    conteudo = f.read()
+qtd_caracteres = len(conteudo)
+print(f'Chars: {qtd_caracteres}')
+
+# linhas
+qtd_linhas = 0
+with open('nomes.txt', 'r') as f:
+    for _ in f:
+        qtd_linhas += 1
+print(f'Linhas: {qtd_linhas}')</code></pre>
+          </div>
+          <div>
+            <h3>Acrescentar conteúdo (append)</h3>
+<pre><code class="language-python">meu_arquivo = open('nomes.txt', mode='a')
+meu_arquivo.write('Maria Joaquina de Amaral Pereira Goes\n')
+meu_arquivo.close()
+
+with open('nomes.txt', 'r') as f:
+    print(f.read())</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- WITH / MODOS / TEXTO VS BINÁRIO -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Context manager (<code>with</code>)</h2>
+<pre><code class="language-python"># Fecha automaticamente (mesmo em erro)
+with open('nomes.txt', mode='r') as meu_arquivo:
+    conteudo = meu_arquivo.read()
+    print(conteudo)</code></pre>
+            <p class="note">Evita esquecimentos e vazamentos de recursos.</p>
+          </div>
+          <div>
+            <h2>Modos mais usados</h2>
+            <ul>
+              <li><code>'r'</code> — leitura (erro se não existir)</li>
+              <li><code>'a'</code> — anexar (cria se não existir)</li>
+              <li><code>'w'</code> — escrita <em>sobrescrevendo</em> (cria se não existir)</li>
+              <li><code>'t'</code> — texto (padrão) • <code>'b'</code> — binário</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Sobrescrever conteúdo</h3>
+<pre><code class="language-python">with open('nomes.txt', mode='w') as f:
+    f.write('Armando Soares Sousa\n')
+
+with open('nomes.txt', mode='r') as f:
+    print(f.read())</code></pre>
+          </div>
+          <div>
+            <h3>Texto × Binário (modos)</h3>
+            <ul>
+              <li><strong>Texto</strong> (<code>'t'</code>): interpreta como Unicode; suporta <code>encoding=</code> e converte quebras de linha.</li>
+              <li><strong>Binário</strong> (<code>'b'</code>): lê/grava bytes crus; sem codificação.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- BINÁRIO & PILLOW -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Lendo binários</h2>
+<pre><code class="language-python"># Arquivo binário (ex.: imagem)
+with open("space_picasso.jpeg", "rb") as file:
+    image_data = file.read()
+    print(type(image_data), len(image_data))  # bytes, número de bytes</code></pre>
+          </div>
+          <div>
+            <h2>Exibir imagem (Pillow)</h2>
+<pre><code class="language-python">from PIL import Image
+
+image_path = "space_picasso.jpeg"
+
+try:
+    image = Image.open(image_path)  # abre via Pillow
+    image.show()                    # visualiza no viewer padrão
+except FileNotFoundError:
+    print(f"Arquivo não encontrado: {image_path}")</code></pre>
+            <p class="note">Biblioteca: <code>Pillow</code>. Útil para manipular e visualizar imagens.</p>
+          </div>
+        </section>
+      </section>
+
+      <!-- DICAS & BOAS PRÁTICAS -->
+      <section>
+        <section>
+          <h2>Dicas &amp; Boas práticas</h2>
+          <ul>
+            <li>Prefira <code>with open(...)</code>.</li>
+            <li>Trate <em>encoding</em> quando precisar de acentos: <code>open(..., encoding="utf-8")</code>.</li>
+            <li>Para grandes arquivos texto, percorra <em>linha a linha</em> para evitar alto uso de memória.</li>
+            <li>Escolha o modo correto: <code>'a'</code> (acrescentar) vs <code>'w'</code> (sobrescrever).</li>
+            <li>Para binários (imagens, áudio), use <code>'rb'</code>/<code>'wb'</code>.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Exercícios rápidos (lab)</h2>
+          <ol>
+            <li>Baixe <code>nomes.txt</code> e conte <strong>linhas</strong>, <strong>palavras</strong> e <strong>caracteres</strong>.</li>
+            <li>Acrescente três nomes ao final e valide.</li>
+            <li>Reescreva o arquivo com um único nome (teste <code>'w'</code>).</li>
+            <li>Faça um script que leia um <em>.jpeg</em> em <code>'rb'</code> e imprima quantos bytes possui.</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>Cheat Sheet</h2>
+<pre><code class="language-python"># Abrir: open(caminho, mode='r', encoding=None)
+# Modos: 'r' ler | 'w' escrever (sobrescreve) | 'a' anexar
+#        + 't' texto (padrão) | 'b' binário  → ex.: 'rb', 'wb'
+# Ler:   f.read(); f.readline(); iterar por linhas
+# Escrever: f.write(), f.writelines()
+# Fechar: f.close()  # ou use 'with' que fecha sozinho
+# Contagem: len(f.read()); sum(1 for _ in f)
+# Binário: with open('img.jpg','rb') as f: data = f.read()</code></pre>
+        </section>
+
+        <section>
+          <h2>Conclusões</h2>
+          <ul>
+            <li>Arquivos são essenciais para <strong>persistência</strong> e <strong>troca</strong> de dados.</li>
+            <li>Domine <code>open()</code>, <code>with</code>, <em>modos</em> e leitura/gravação.</li>
+            <li>Entenda <strong>texto vs binário</strong> para escolher o modo adequado.</li>
+          </ul>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <!-- Reveal.js highlight plugin (bundles highlight.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      plugins: [ RevealHighlight ]
+    });
+  </script>
+</body>
+</html>

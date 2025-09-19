@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apresentação — Funções em Python (Lab CC)</title>
+
+  <!-- Reveal.js core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <!-- Light Theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+
+  <!-- Highlight.js (syntax highlighting for code) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      --r-heading-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .reveal pre code {
+      font-size: 1.05em;
+      line-height: 1.25;
+      tab-size: 4;
+    }
+    .reveal section h1, .reveal section h2, .reveal section h3 { letter-spacing: 0.2px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .85em; opacity: .9; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: rgba(0,0,0,.06); font-size: .8em; }
+    table { width: 100%; font-size: .9em; border-collapse: collapse; }
+    th, td { border: 1px solid #bbb; padding: 6px 10px; }
+    th { background: #f6f8fa; }
+    .small code { font-size: .9em; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE -->
+      <section>
+        <h1>Funções em Python</h1>
+        <p>Laboratório de Programação — Ciência da Computação • UFPI</p>
+        <p class="note">Blocos reutilizáveis de código — definição, parâmetros, retorno, recursão, escopo e passagem de argumentos — com <span class="badge">syntax highlighting</span></p>
+      </section>
+
+      <!-- INTRO -->
+      <section>
+        <section>
+          <h2>O que são funções?</h2>
+          <ul>
+            <li>Blocos de código <strong>reutilizáveis</strong> que realizam uma tarefa específica.</li>
+            <li>Promovem <strong>modularidade</strong>, <strong>leitura</strong> mais simples e evitam repetição (DRY).</li>
+            <li>Possuem <em>parâmetros</em> (entrada) e podem produzir <em>valores de retorno</em>.</li>
+          </ul>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Definindo uma função</h3>
+<pre><code class="language-python">def saudacao(nome):
+    print("Olá,", nome + "!")</code></pre>
+          </div>
+          <div>
+            <h3>Chamando a função</h3>
+<pre><code class="language-python">saudacao("Maria")   # Saída: Olá, Maria!</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Parâmetros &amp; argumentos</h3>
+<pre><code class="language-python">def soma(a, b):
+    return a + b
+
+resultado = soma(3, 5)      # posicionais
+resultado = soma(a=3, b=5)  # nomeados (keyword)</code></pre>
+          </div>
+          <div>
+            <h3>Valores padrão</h3>
+<pre><code class="language-python">def area_retangulo(largura, altura=1):
+    return largura * altura
+
+area_retangulo(5)           # 5 (altura usa padrão 1)
+area_retangulo(5, altura=2) # 10</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Retornando valores</h3>
+<pre><code class="language-python">def dividir(a, b):
+    if b == 0:
+        return None
+    return a / b
+
+q = dividir(10, 2)  # 5.0</code></pre>
+          </div>
+          <div>
+            <h3>Vários retornos</h3>
+<pre><code class="language-python">def estatisticas(valores):
+    return min(valores), max(valores), sum(valores)/len(valores)
+
+mn, mx, media = estatisticas([6.5, 7.0, 8.3])</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- ARGUMENTOS (pos/kw/default/*args/**kwargs) -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Tipos de argumentos</h2>
+          <ul>
+            <li><strong>Posicionais</strong> — ordem importa</li>
+            <li><strong>Nomeados</strong> — especifica <code>param=valor</code></li>
+            <li><strong>Com valor padrão</strong> — parâmetro opcional</li>
+          </ul>
+          </div>
+          <div>
+            <h3>*args e **kwargs (extra)</h3>
+<pre><code class="language-python">def soma_tudo(*args):
+    return sum(args)
+
+def imprimir_config(**kwargs):
+    for k, v in kwargs.items():
+        print(k, "=", v)
+
+soma_tudo(1,2,3)  # 6
+imprimir_config(tema="claro", idioma="pt-BR")</code></pre>
+          </div>
+        </section>
+
+        <section class="small">
+          <h3>Observação (Python ≥ 3.8): posicionais e nomeados explícitos</h3>
+<pre><code class="language-python">def power(base, exp, /, modulo=None, *, arredonda=False):
+    # '/' marca parâmetros somente posicionais;
+    # '*' marca parâmetros somente nomeados.
+    r = base ** exp
+    if modulo is not None:
+        r %= modulo
+    return round(r) if arredonda else r
+
+power(2, 3, 5)                 # ok (posicionais + opcional)
+power(2, 3, modulo=5)          # ok (nomeado)
+# power(base=2, exp=3)         # ERRO: base/exp são somente posicionais
+# power(2, 3, True)            # ERRO: 'modulo' é somente nomeado</code></pre>
+        </section>
+      </section>
+
+      <!-- LAMBDA & DOCSTRINGS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Funções anônimas (lambda)</h2>
+<pre><code class="language-python">dobro = lambda x: x * 2
+print(dobro(4))   # 8</code></pre>
+            <p class="note">Úteis para operações simples (ex.: <code>key=</code> em <code>sorted</code>, <code>map</code>, <code>filter</code>).</p>
+          </div>
+          <div>
+            <h2>Docstrings</h2>
+<pre><code class="language-python">def fatorial(n):
+    '''Calcula o fatorial de n (n!).'''
+    if n == 0:
+        return 1
+    return n * fatorial(n-1)
+
+print(fatorial.__doc__)  # exibe a docstring</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- RECURSÃO -->
+      <section>
+        <section>
+          <h2>Funções Recursivas</h2>
+          <p>Uma função que chama a si mesma para resolver subproblemas.</p>
+          <ul>
+            <li><strong>Caso base</strong>: encerra a recursão</li>
+            <li><strong>Caso recursivo</strong>: aproxima do caso base</li>
+          </ul>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Exemplo: fatorial</h3>
+<pre><code class="language-python">def fatorial(n):
+    if n == 0:              # caso base
+        return 1
+    return n * fatorial(n-1)  # caso recursivo
+
+print(fatorial(5))  # 120</code></pre>
+          </div>
+          <div>
+            <h3>Exemplo: Fibonacci</h3>
+<pre><code class="language-python">def fibonacci(n):
+    if n == 0 or n == 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+print(fibonacci(5))  # 5</code></pre>
+            <p class="note">Observação: esta versão é exponencial; prefira <em>memoization</em> ou iteração.</p>
+          </div>
+        </section>
+
+        <section class="small">
+          <h3>(Extra) Otimizando com cache</h3>
+<pre><code class="language-python">from functools import lru_cache
+
+@lru_cache(maxsize=None)
+def fib_memo(n):
+    if n < 2:
+        return n
+    return fib_memo(n-1) + fib_memo(n-2)</code></pre>
+        </section>
+      </section>
+
+      <!-- ESCOPO -->
+      <section>
+        <section>
+          <h2>Escopo de Variáveis (LEGB)</h2>
+          <ul>
+            <li><strong>L</strong>ocal — dentro da função</li>
+            <li><strong>E</strong>nclosing — funções aninhadas</li>
+            <li><strong>G</strong>lobal — módulo atual</li>
+            <li><strong>B</strong>uilt-in — nomes do Python (<code>len</code>, <code>print</code>…)</li>
+          </ul>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Variáveis locais e globais</h3>
+<pre><code class="language-python">x = 20  # global
+
+def minha_funcao():
+    y = 10  # local
+    print(y, x)
+
+minha_funcao()  # 10 20
+# print(y)     # NameError: y não existe aqui</code></pre>
+          </div>
+          <div>
+            <h3>Modificar global (cuidado!)</h3>
+<pre><code class="language-python">x = 10
+
+def altera():
+    global x
+    x = 20
+
+altera()
+print(x)  # 20</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col small">
+          <div>
+            <h3>Escopo aninhado (nonlocal)</h3>
+<pre><code class="language-python">def outer():
+    msg = "outer"
+    def inner():
+        nonlocal msg
+        msg = "inner"
+    inner()
+    return msg
+
+print(outer())  # "inner"</code></pre>
+          </div>
+          <div>
+            <h3>LEGB em ação</h3>
+<pre><code class="language-python">x = "global"
+def outer():
+    x = "outer"
+    def inner():
+        x = "inner"
+        print(x)  # inner
+    inner()
+    print(x)      # outer
+outer()
+print(x)          # global</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- PASSAGEM DE ARGUMENTOS -->
+      <section>
+        <section>
+          <h2>Passagem de argumentos</h2>
+          <p><strong>Modelo do Python:</strong> <em>passagem por objeto</em> (também chamado de <em>pass-by-assignment</em>).</p>
+          <ul>
+            <li>Imutáveis (int, str, tuple): parecem “por valor” — não há mutação.</li>
+            <li>Mutáveis (list, dict, set): parecem “por referência” — podem ser mutados.</li>
+          </ul>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Imutáveis (efeito de cópia)</h3>
+<pre><code class="language-python">def dobrar_numero(x):
+    x = x * 2
+    print("Dentro:", x)
+
+n = 5
+dobrar_numero(n)
+print("Fora:", n)  # 5</code></pre>
+          </div>
+          <div>
+            <h3>Mutáveis (efeito de referência)</h3>
+<pre><code class="language-python">def adicionar_elemento(lst):
+    lst.append(4)
+
+val = [1, 2, 3]
+adicionar_elemento(val)
+print(val)  # [1, 2, 3, 4]</code></pre>
+          </div>
+        </section>
+
+        <section class="small">
+          <h3>Atenção: argumentos padrão mutáveis</h3>
+<pre><code class="language-python">def acumular(item, colecao=[]):   # NÃO recomendado
+    colecao.append(item)
+    return colecao
+
+print(acumular(1))  # [1]
+print(acumular(2))  # [1, 2]  (surpresa!)
+
+# Forma correta
+def acumular_ok(item, colecao=None):
+    if colecao is None:
+        colecao = []
+    colecao.append(item)
+    return colecao</code></pre>
+        </section>
+      </section>
+
+      <!-- BOAS PRÁTICAS -->
+      <section>
+        <section>
+          <h2>Boas práticas</h2>
+          <ul>
+            <li>Prefira <strong>funções puras</strong> (sem efeitos colaterais) quando possível.</li>
+            <li>Escreva <strong>docstrings</strong> claras e use <strong>type hints</strong>.</li>
+            <li>Retorne cedo (early return) para simplificar ramos.</li>
+            <li>Evite <code>global</code>; passe dados por parâmetros e retornos.</li>
+            <li>Teste funções isoladamente (unidades pequenas, fáceis de testar).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Cheat Sheet</h2>
+<pre><code class="language-python"># Definir: def nome(params): ...; return valor
+# Chamar: nome(args); nome(param=valor)
+# Padrão: def f(a, b=0): ...
+# *args/**kwargs: coletores de argumentos
+# Docstring: def f(): \"\"\"Descrição.\"\"\"
+# Recursão: ter caso base + caso recursivo
+# Escopo: LEGB; use global/nonlocal com parcimônia
+# Passagem: por objeto; imutáveis vs mutáveis</code></pre>
+        </section>
+
+        <section>
+          <h2>Exemplo final — Funções em ação</h2>
+<pre><code class="language-python">def normalizar(nomes):
+    return [n.strip().title() for n in nomes]
+
+def filtrar(nomes, minimo=3):
+    return [n for n in nomes if len(n) >= minimo]
+
+def pipeline(nomes):
+    return filtrar(normalizar(nomes), minimo=4)
+
+dados = ["  ana", "rui ", "   mariana", "jo"]
+print(pipeline(dados))  # ['Ana', 'Rui', 'Mariana']</code></pre>
+        </section>
+
+        <section>
+          <h2>Conclusões</h2>
+          <ul>
+            <li>Funções organizam, documentam e reutilizam código.</li>
+            <li>Parâmetros/retornos bem definidos simplificam manutenção.</li>
+            <li>Recursão, escopo e passagem de argumentos exigem atenção.</li>
+          </ul>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <!-- Reveal.js highlight plugin (bundles highlight.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      plugins: [ RevealHighlight ]
+    });
+  </script>
+</body>
+</html>
