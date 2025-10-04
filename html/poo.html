@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apresentação — Programação Orientada a Objetos em Python (Lab CC)</title>
+
+  <!-- Reveal.js core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <!-- Light Theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+
+  <!-- Highlight.js (syntax highlighting for code) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      --r-heading-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .reveal pre code {
+      font-size: 1.05em;
+      line-height: 1.25;
+      tab-size: 4;
+    }
+    .reveal section h1, .reveal section h2, .reveal section h3 { letter-spacing: 0.2px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .85em; opacity: .9; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: rgba(0,0,0,.06); font-size: .8em; }
+    table { width: 100%; font-size: .9em; border-collapse: collapse; }
+    th, td { border: 1px solid #bbb; padding: 6px 10px; }
+    th { background: #f6f8fa; }
+    .small code { font-size: .9em; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE -->
+      <section>
+        <h1>Programação Orientada a Objetos (POO) em Python</h1>
+        <p>Laboratório de Programação — Ciência da Computação • UFPI</p>
+        <p class="note">Conceitos, sintaxe de classes, herança, polimorfismo, encapsulamento, propriedades, dataclasses — com <span class="badge">syntax highlighting</span></p>
+      </section>
+
+      <!-- INTRO -->
+      <section>
+        <section>
+          <h2>O que é POO?</h2>
+          <ul>
+            <li>Paradigma que organiza o código em <strong>objetos</strong>, instâncias de <strong>classes</strong>.</li>
+            <li>Foca em <strong>abstração</strong>, <strong>encapsulamento</strong>, <strong>herança</strong> e <strong>polimorfismo</strong>.</li>
+            <li>Python oferece POO de forma <strong>flexível</strong> e <strong>intuitiva</strong>.</li>
+          </ul>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Por que usar POO?</h3>
+            <ul>
+              <li><strong>Reutilização</strong> (herança, composição)</li>
+              <li><strong>Organização</strong> (modularidade)</li>
+              <li><strong>Manutenção</strong> (encapsulamento)</li>
+              <li><strong>Modelagem</strong> mais próxima do mundo real</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Vocabulário</h3>
+            <table>
+              <tr><th>Termo</th><th>Definição</th></tr>
+              <tr><td>Classe</td><td>Molde com atributos e métodos</td></tr>
+              <tr><td>Objeto</td><td>Instância de uma classe</td></tr>
+              <tr><td>Atributo</td><td>Dado do objeto (estado)</td></tr>
+              <tr><td>Método</td><td>Comportamento do objeto (função)</td></tr>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <!-- SINTAXE BÁSICA DE CLASSES -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Definindo classes</h2>
+<pre><code class="language-python">class Pessoa:
+    def __init__(self, nome, idade):  # construtor
+        self.nome = nome      # atributo de instância (público)
+        self.__idade = idade  # "privado" (name mangling)
+
+    def apresentar(self):     # método de instância
+        print(f"Olá, eu sou {self.nome}!")
+
+p = Pessoa("Maria", 25)
+p.apresentar()  # Olá, eu sou Maria!</code></pre>
+          </div>
+          <div>
+            <h3>Sobre <code>self</code></h3>
+            <ul>
+              <li>Primeiro parâmetro dos métodos de instância.</li>
+              <li>Referencia o <em>objeto atual</em>.</li>
+              <li>Nome é convenção; poderia ser outro, mas <code>self</code> é padrão.</li>
+            </ul>
+            <h3>Encapsulamento</h3>
+            <ul>
+              <li><code>_protegido</code> (convenção)</li>
+              <li><code>__privado</code> (name mangling: <code>_Classe__nome</code>)</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Atributos de classe × instância</h3>
+<pre><code class="language-python">class Contador:
+    instancias = 0  # atributo de CLASSE (compartilhado)
+
+    def __init__(self):
+        Contador.instancias += 1
+        self.valor = 0        # atributo de INSTÂNCIA
+
+a = Contador(); b = Contador()
+print(Contador.instancias)  # 2
+print(a.valor, b.valor)     # 0 0</code></pre>
+          </div>
+          <div>
+            <h3>Métodos estáticos e de classe</h3>
+<pre><code class="language-python">class Util:
+    @staticmethod
+    def soma(a, b):
+        return a + b
+
+    @classmethod
+    def from_str(cls, s):
+        a, b = map(int, s.split(","))
+        return cls.soma(a, b)
+
+print(Util.soma(2,3))     # 5
+print(Util.from_str("4,6"))  # 10</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- PROPRIEDADES & DUNDER METHODS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Propriedades (<code>@property</code>)</h2>
+<pre><code class="language-python">class Conta:
+    def __init__(self, saldo=0.0):
+        self._saldo = saldo
+
+    @property
+    def saldo(self):         # getter
+        return self._saldo
+
+    @saldo.setter
+    def saldo(self, valor):  # setter com validação
+        if valor &lt; 0:
+            raise ValueError("Saldo não pode ser negativo")
+        self._saldo = valor</code></pre>
+          </div>
+          <div>
+            <h2>Métodos especiais (dunder)</h2>
+<pre><code class="language-python">class Vetor2D:
+    def __init__(self, x, y): self.x, self.y = x, y
+    def __repr__(self): return f"Vetor2D({self.x}, {self.y})"
+    def __add__(self, other): return Vetor2D(self.x+other.x, self.y+other.y)
+    def __eq__(self, other): return self.x==other.x and self.y==other.y
+
+a = Vetor2D(1,2); b = Vetor2D(3,4)
+print(a + b)  # Vetor2D(4, 6)</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col small">
+          <div>
+            <h3>Ordenação e hashing</h3>
+<pre><code class="language-python">class Pessoa:
+    def __init__(self, nome): self.nome = nome
+    def __repr__(self): return f"Pessoa({self.nome!r})"
+    def __lt__(self, o): return self.nome &lt; o.nome  # ordenar por nome
+    def __hash__(self): return hash(self.nome)      # permite usar em set/dict</code></pre>
+          </div>
+          <div>
+            <h3><code>dataclasses</code></h3>
+<pre><code class="language-python">from dataclasses import dataclass
+
+@dataclass(order=True, frozen=False)
+class Produto:
+    id: int
+    nome: str
+    preco: float = 0.0
+
+p = Produto(1, "Café", 12.5)
+print(p)</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- HERANÇA & POLIMORFISMO -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Herança</h2>
+<pre><code class="language-python">class Pessoa:
+    def __init__(self, nome): self.nome = nome
+    def apresentar(self): print(f"Olá, sou {self.nome}.")
+
+class Aluno(Pessoa):
+    def __init__(self, nome, matricula):
+        super().__init__(nome)
+        self.matricula = matricula
+
+    def apresentar(self):
+        super().apresentar()
+        print(f"Matrícula: {self.matricula}")</code></pre>
+          </div>
+          <div>
+            <h2>Polimorfismo</h2>
+<pre><code class="language-python">class Forma:
+    def area(self): raise NotImplementedError
+
+class Circulo(Forma):
+    def __init__(self, r): self.r = r
+    def area(self): return 3.14159 * self.r**2
+
+class Quadrado(Forma):
+    def __init__(self, l): self.l = l
+    def area(self): return self.l**2
+
+def total_area(formas):
+    return sum(f.area() for f in formas)
+
+print(total_area([Circulo(2), Quadrado(3)]))</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col small">
+          <div>
+            <h3>Classes abstratas (ABC)</h3>
+<pre><code class="language-python">from abc import ABC, abstractmethod
+
+class Repositorio(ABC):
+    @abstractmethod
+    def salvar(self, obj): ...
+    @abstractmethod
+    def buscar(self, id): ...</code></pre>
+          </div>
+          <div>
+            <h3>MRO &amp; herança múltipla (cuidado)</h3>
+            <ul>
+              <li>Ordem de resolução de métodos (MRO) define qual método é chamado.</li>
+              <li>Use <code>super()</code> e evite diamantes complexos.</li>
+              <li>Prefira <strong>composição</strong> a herança múltipla quando possível.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- COMPOSIÇÃO & EXEMPLO PRÁTICO -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Composição (preferida)</h2>
+            <ul>
+              <li>Objetos <strong>contêm</strong> outros objetos para delegar responsabilidades.</li>
+              <li>Reduz acoplamento e tende a ser mais simples de manter.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Exemplo</h3>
+<pre><code class="language-python">class Logger:
+    def log(self, msg): print("[LOG]", msg)
+
+class ServicoEmail:
+    def __init__(self, logger): self.logger = logger
+    def enviar(self, para, msg):
+        self.logger.log(f"Enviando email para {para}")
+        # ... envio ...
+        self.logger.log("OK")</code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h2>Caso de uso (mini-sistema)</h2>
+          <p class="note">Cadastro e persistência simples em arquivo (POO + I/O).</p>
+<pre><code class="language-python">class Pessoa:
+    def __init__(self, cpf, nome, telefone):
+        self.cpf, self.nome, self.telefone = cpf, nome, telefone
+    def __str__(self):
+        return f"{self.cpf},{self.nome},{self.telefone}"
+
+class GerenciadorPessoas:
+    def __init__(self, arquivo="pessoas.txt"):
+        self.pessoas = {}    # dict[cpf] = Pessoa
+        self.arquivo = arquivo
+        self.carregar()
+
+    def cadastrar(self, cpf, nome, telefone):
+        self.pessoas[cpf] = Pessoa(cpf, nome, telefone)
+
+    def listar(self):
+        return list(self.pessoas.values())
+
+    def salvar(self):
+        with open(self.arquivo, "w", encoding="utf-8") as f:
+            for p in self.pessoas.values():
+                f.write(str(p) + "\\n")
+
+    def carregar(self):
+        try:
+            with open(self.arquivo, "r", encoding="utf-8") as f:
+                for linha in f:
+                    cpf, nome, tel = linha.strip().split(",")
+                    self.pessoas[cpf] = Pessoa(cpf, nome, tel)
+        except FileNotFoundError:
+            pass</code></pre>
+        </section>
+      </section>
+
+      <!-- BOAS PRÁTICAS -->
+      <section>
+        <section>
+          <h2>Boas práticas em POO (Python)</h2>
+          <ul>
+            <li>Use nomes claros e docstrings em classes/métodos.</li>
+            <li>Evite herança desnecessária; prefira composição.</li>
+            <li>Encapsule com propriedades para validação.</li>
+            <li>Pequenos métodos coesos; aplique SRP/SOLID.</li>
+            <li>Use <code>dataclasses</code> para objetos de dados.</li>
+            <li>Adote <strong>type hints</strong> para legibilidade e ferramentas.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Cheat Sheet</h2>
+<pre><code class="language-python"># Classe + construtor
+class C: 
+    def __init__(self, x): self.x = x
+
+# Métodos: instância, classe, estático
+class C:
+    def m(self): ...
+    @classmethod
+    def cm(cls): ...
+    @staticmethod
+    def sm(): ...
+
+# Propriedade
+class C:
+    @property
+    def x(self): ...
+    @x.setter
+    def x(self, v): ...
+
+# Herança + super
+class B(A):
+    def __init__(self):
+        super().__init__()
+
+# ABC
+from abc import ABC, abstractmethod
+class Repo(ABC):
+    @abstractmethod
+    def salvar(self, obj): ...</code></pre>
+        </section>
+
+        <section>
+          <h2>Conclusões</h2>
+          <ul>
+            <li>POO modela problemas como objetos com estado e comportamento.</li>
+            <li>Python facilita encapsulamento, herança e polimorfismo.</li>
+            <li>Propriedades, dunder methods e dataclasses elevam a expressividade.</li>
+          </ul>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <!-- Reveal.js highlight plugin (bundles highlight.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      plugins: [ RevealHighlight ]
+    });
+  </script>
+</body>
+</html>
