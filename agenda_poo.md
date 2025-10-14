@@ -7,7 +7,7 @@ Código da aplicação disponível em https://github.com/ufpi-lp/lp2025-2/tree/m
 ## Estrutura da aplicação 
 
 ```bash
-agenda/
+agenda
 ├── 🚀 main.py (Entry point)
 ├── 📦 app/
 │   ├── cadastro.py (CadastroPessoasService)
@@ -15,6 +15,19 @@ agenda/
 │       └── telas.py (UI Components)
 └── 📊 dados/
     └── pessoas.csv (Data storage)
+```
+
+**Estrutura funcional**
+```bash
+agenda
+├── main.py (▶️ EXECUÇÃO)
+├── 📦 PACOTE APP
+│   ├── 🎯 SERVIÇOS
+│   │   └── cadastro.py
+│   └── 🎨 INTERFACE
+│       └── text/rich/telas.py
+└── 💾 DADOS
+    └── pessoas.csv
 ```
 
 A estrutura mostra uma organização clara seguindo os princípios de separação de responsabilidades:
