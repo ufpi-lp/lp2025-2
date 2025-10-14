@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apresentação — Biblioteca Python "rich" (Lab CC)</title>
+
+  <!-- Reveal.js core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <!-- Light Theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+
+  <!-- Highlight.js (syntax highlighting for code) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      --r-heading-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .reveal pre code { font-size: 1.05em; line-height: 1.25; tab-size: 4; }
+    .reveal section h1, .reveal section h2, .reveal section h3 { letter-spacing: 0.2px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .85em; opacity: .9; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: rgba(0,0,0,.06); font-size: .8em; }
+    table { width: 100%; font-size: .9em; border-collapse: collapse; }
+    th, td { border: 1px solid #bbb; padding: 6px 10px; }
+    th { background: #f6f8fa; }
+    .small code { font-size: .9em; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE -->
+      <section>
+        <h1>Python <em>rich</em>: Terminal Bonito & Produtivo</h1>
+        <p>Laboratório de Programação — Ciência da Computação • UFPI</p>
+        <p class="note">Console, estilos, tabelas, painéis, árvores, progresso, live, markdown, syntax, status/spinners e mais — com <span class="badge">syntax highlighting</span></p>
+      </section>
+
+      <!-- INTRO -->
+      <section>
+        <section>
+          <h2>O que é o <code>rich</code>?</h2>
+          <ul>
+            <li>Biblioteca para <strong>renderizar</strong> texto com estilo no terminal (cores, negrito, emoji, etc.).</li>
+            <li>Componentes: <strong>Console</strong>, <strong>Table</strong>, <strong>Panel</strong>, <strong>Tree</strong>, <strong>Progress</strong>, <strong>Live</strong>, <strong>Markdown</strong>, <strong>Syntax</strong>, <strong>Status</strong>, <strong>Columns</strong>, <strong>Traceback</strong>, <strong>Prompt</strong>…</li>
+            <li>Funciona em Windows, macOS e Linux.</li>
+          </ul>
+<pre><code class="language-bash">pip install rich</code></pre>
+        </section>
+      </section>
+
+      <!-- CONSOLE & ESTILOS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Console & Estilos básicos</h2>
+<pre><code class="language-python">from rich.console import Console
+console = Console()
+
+console.print("[bold magenta]Olá[/] [green]mundo[/]! :snake:")
+console.print("Erros em [bold red]vermelho[/], avisos em [yellow]amarelo[/].")</code></pre>
+          </div>
+          <div>
+            <h3>Markup & Emojis</h3>
+            <ul>
+              <li>Tags: <code>[bold]</code>, <code>[italic]</code>, <code>[color]</code>, <code>[/]</code>.</li>
+              <li>Emojis: <code>:snake:</code>, <code>:rocket:</code>…</li>
+              <li>Desabilite markup: <code>Console(markup=False)</code>.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="two-col small">
+          <div>
+            <h3>Pretty & Inspect</h3>
+<pre><code class="language-python">from rich import pretty, inspect
+pretty.install()  # ativa formatação bonita do print()
+dados = {"curso": "Lab CC", "alunos": ["Ana", "João"], "ativo": True}
+print(dados)      # agora colorido e identado
+inspect(dados, methods=True)</code></pre>
+          </div>
+          <div>
+            <h3>Regra e Texto alinhado</h3>
+<pre><code class="language-python">from rich.console import Console
+from rich.rule import Rule
+from rich.align import Align
+
+console = Console()
+console.print(Rule("[bold blue]Seção 1"))
+console.print(Align("Centralizado", align="center"))</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- PANEL & TABLE -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Panel (caixa com borda)</h2>
+<pre><code class="language-python">from rich.console import Console
+from rich.panel import Panel
+
+console = Console()
+console.print(Panel.fit(
+    "[bold green]Sucesso![/]\nOperação concluída.",
+    title="Status", border_style="green"
+))</code></pre>
+          </div>
+          <div>
+            <h2>Table (tabelas bonitas)</h2>
+<pre><code class="language-python">from rich.console import Console
+from rich.table import Table
+
+table = Table(title="Alunos")
+table.add_column("Nome", style="cyan", no_wrap=True)
+table.add_column("Média", justify="right")
+table.add_row("Ana", "9.2")
+table.add_row("João", "8.7")
+
+Console().print(table)</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- TREE & COLUMNS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Tree (árvores)</h2>
+<pre><code class="language-python">from rich.console import Console
+from rich.tree import Tree
+
+raiz = Tree("Projeto")
+src = raiz.add("[bold]src[/]")
+src.add("main.py")
+src.add("utils.py")
+raiz.add("README.md")
+
+Console().print(raiz)</code></pre>
+          </div>
+          <div>
+            <h2>Columns (múltiplas colunas)</h2>
+<pre><code class="language-python">from rich.console import Console
+from rich.columns import Columns
+
+itens = [f"[cyan]Item {i}[/]" for i in range(1, 7)]
+Console().print(Columns(itens, equal=True, expand=True))</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- PROGRESS & STATUS/SPINNERS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Progress (barras de progresso)</h2>
+<pre><code class="language-python">import time
+from rich.progress import Progress
+
+with Progress() as progress:
+    tarefa = progress.add_task("[green]Baixando...", total=100)
+    while not progress.finished:
+        progress.update(tarefa, advance=5)
+        time.sleep(0.05)</code></pre>
+          </div>
+          <div>
+            <h2>Status & Spinners</h2>
+<pre><code class="language-python">import time
+from rich.console import Console
+
+console = Console()
+with console.status("[bold blue]Processando..."):
+    time.sleep(2)  # seu trabalho aqui
+console.print("[green]Pronto![/]")</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- LIVE -->
+      <section>
+        <section>
+          <h2>Live (painéis atualizados em tempo real)</h2>
+<pre><code class="language-python">import time
+from rich.live import Live
+from rich.table import Table
+
+def tabela(tick):
+    tb = Table(title=f"Tick {tick}")
+    tb.add_column("Item"); tb.add_column("Valor", justify="right")
+    for i in range(3):
+        tb.add_row(f"X{i}", str(tick * (i + 1)))
+    return tb
+
+with Live(tabela(0), refresh_per_second=4) as live:
+    for n in range(1, 6):
+        time.sleep(0.5)
+        live.update(tabela(n))</code></pre>
+          <p class="note">Útil para dashboards de CLI, monitores, scraping, etc.</p>
+        </section>
+      </section>
+
+      <!-- SYNTAX & MARKDOWN -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Syntax (realce de código)</h2>
+<pre><code class="language-python">from rich.console import Console
+from rich.syntax import Syntax
+
+code = "def soma(a, b):\n    return a + b\n"
+syntax = Syntax(code, "python", theme="monokai", line_numbers=True)
+Console().print(syntax)</code></pre>
+          </div>
+          <div>
+            <h2>Markdown</h2>
+<pre><code class="language-python">from rich.console import Console
+from rich.markdown import Markdown
+
+md = Markdown("# Título\n*Itálico* **Negrito**\n- Lista 1\n- Lista 2")
+Console().print(md)</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- TRACEBACK & LOGGING -->
+      <section>
+        <section class="two-col small">
+          <div>
+            <h2>Traceback bonito</h2>
+<pre><code class="language-python">from rich.traceback import install
+install(show_locals=True)  # melhora tracebacks globais
+
+def falha():
+    x = 1 / 0
+falha()</code></pre>
+          </div>
+          <div>
+            <h2>Logging com Rich</h2>
+<pre><code class="language-python">import logging
+from rich.logging import RichHandler
+
+logging.basicConfig(
+    level="INFO",
+    format="%(message)s",
+    handlers=[RichHandler(rich_tracebacks=True)]
+)
+
+log = logging.getLogger("app")
+log.info("Servidor iniciado")</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- PROMPT & PROGRESS AVANÇADO -->
+      <section>
+        <section class="two-col small">
+          <div>
+            <h2>Prompt simples</h2>
+<pre><code class="language-python">from rich.prompt import Prompt, Confirm
+
+nome = Prompt.ask("Seu nome", default="Aluno")
+ok = Confirm.ask("Deseja continuar?", default=True)
+print(nome, ok)</code></pre>
+          </div>
+          <div>
+            <h2>Progress avançado (múltiplas tarefas)</h2>
+<pre><code class="language-python">import time
+from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn
+
+with Progress(
+    SpinnerColumn(),
+    TextColumn("[progress.description]{task.description}"),
+    BarColumn(),
+    TextColumn("{task.percentage:>3.0f}%"),
+) as progress:
+    t1 = progress.add_task("Tarefa A", total=60)
+    t2 = progress.add_task("Tarefa B", total=90)
+    while not progress.finished:
+        progress.update(t1, advance=2)
+        progress.update(t2, advance=3)
+        time.sleep(0.05)</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- BOAS PRÁTICAS -->
+      <section>
+        <section>
+          <h2>Boas práticas & Dicas</h2>
+          <ul>
+            <li>Centralize a saída usando um único <code>Console()</code> compartilhado.</li>
+            <li>Evite misturar <code>print()</code> e <code>console.print()</code> em CLIs complexas.</li>
+            <li>Use <strong>Panel</strong>/<strong>Table</strong> para estruturar informações.</li>
+            <li>Combine <strong>Live</strong> + <strong>Progress</strong> para dashboards de terminal.</li>
+            <li>Habilite <strong>tracebacks ricos</strong> durante o desenvolvimento.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Cheat Sheet</h2>
+<pre><code class="language-python">from rich.console import Console
+from rich.table import Table
+from rich.panel import Panel
+from rich.progress import Progress
+from rich.syntax import Syntax
+
+console = Console()
+console.print("[bold green]OK[/]")
+
+tb = Table(); tb.add_column("A"); tb.add_row("1"); console.print(tb)
+console.print(Panel("Mensagem", title="Info"))
+
+with Progress() as p:
+    t = p.add_task("Baixando", total=100)
+    p.update(t, advance=100)
+
+console.print(Syntax("print('hi')", "python"))</code></pre>
+        </section>
+
+        <section>
+          <h2>Conclusões</h2>
+          <ul>
+            <li><code>rich</code> eleva a experiência de CLIs: legibilidade, feedback e estética.</li>
+            <li>Explore componentes de alto nível para interfaces ricas no terminal.</li>
+            <li>Integre com <code>logging</code>, tracebacks e prompts para fluxo completo.</li>
+          </ul>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <!-- Reveal.js highlight plugin (bundles highlight.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      plugins: [ RevealHighlight ]
+    });
+  </script>
+</body>
+</html>
