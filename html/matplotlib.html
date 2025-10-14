@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apresentação — Gráficos com Python (Matplotlib)</title>
+
+  <!-- Reveal.js core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <!-- Light Theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+
+  <!-- Highlight.js (syntax highlighting for code) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      --r-heading-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .reveal pre code { font-size: 1.05em; line-height: 1.25; tab-size: 4; }
+    .reveal section h1, .reveal section h2, .reveal section h3 { letter-spacing: 0.2px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .85em; opacity: .9; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: rgba(0,0,0,.06); font-size: .8em; }
+    table { width: 100%; font-size: .9em; border-collapse: collapse; }
+    th, td { border: 1px solid #bbb; padding: 6px 10px; }
+    th { background: #f6f8fa; }
+    .small code { font-size: .9em; }
+    .center { text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE -->
+      <section>
+        <h1>Gráficos com Python — Matplotlib</h1>
+        <p>Laboratório de Programação — Ciência da Computação • UFPI</p>
+        <p class="note">Figuras & Eixos, Pyplot, NumPy/Pandas, personalização, subplots e gráficos 2D comuns — com <span class="badge">syntax highlighting</span></p>
+      </section>
+
+      <!-- INTRO / O QUE É -->
+      <section>
+        <section>
+          <h2>O que é o Matplotlib?</h2>
+          <ul>
+            <li>Biblioteca de visualização <strong>amplamente usada</strong> em Python.</li>
+            <li>Gera gráficos <strong>estáticos</strong>, <strong>interativos</strong> e até <strong>3D</strong>.</li>
+            <li>Conceitos centrais: <strong>Figure</strong> (figura) e <strong>Axes</strong> (eixos/área de plotagem).</li>
+            <li>Integra-se bem com <strong>NumPy</strong> e <strong>Pandas</strong>; exporta para PNG, SVG, PDF, etc.</li>
+          </ul>
+<pre><code class="language-bash">pip install matplotlib numpy pandas</code></pre>
+          <p class="note">Conteúdo alinhado ao material do curso (UFPI).</p>
+        </section>
+      </section>
+
+      <!-- FIGURE / AXES / PYPLOT -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Figure & Axes (Pyplot)</h2>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+fig, ax = plt.subplots(figsize=(6, 3))  # cria Figure e Axes
+ax.plot(x, y, label="sen(x)")
+ax.set_title("Seno simples")
+ax.set_xlabel("x")
+ax.set_ylabel("y")
+ax.legend()
+plt.show()</code></pre>
+          </div>
+          <div>
+            <h3>Personalização</h3>
+            <ul>
+              <li>Rótulos e título: <code>set_xlabel</code>, <code>set_ylabel</code>, <code>set_title</code></li>
+              <li>Limites: <code>set_xlim</code>, <code>set_ylim</code></li>
+              <li>Estilo: cores, marcadores, tipos de linha</li>
+              <li>Legenda: <code>legend()</code></li>
+              <li>Grade: <code>grid(True)</code></li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- EIXOS / LIMITES / ROTULOS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Eixo X & Eixo Y</h2>
+<pre><code class="language-python">fig, ax = plt.subplots()
+ax.plot(x, np.cos(x))
+ax.set_xlim(0, 10)     # limites do eixo x
+ax.set_ylim(-1, 1)     # limites do eixo y
+ax.grid(True)
+plt.show()</code></pre>
+          </div>
+          <div>
+            <h2>Rotulando eixos</h2>
+<pre><code class="language-python">fig, ax = plt.subplots()
+ax.plot(x, np.sin(x) * np.exp(-0.2*x))
+ax.set_xlabel("Tempo (s)")
+ax.set_ylabel("Amplitude")
+ax.set_title("Sinal amortecido")
+plt.show()</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- PLOT / LINHAS BÁSICAS -->
+      <section>
+        <section>
+          <h2>Função <code>plot</code> (linhas)</h2>
+<pre><code class="language-python">x = np.linspace(-2, 2, 200)
+y1 = 2*x + 1                     # reta
+y2 = x**2 - 1                    # 2º grau
+y3 = 0.5*x**3 - 0.2*x            # 3º grau
+
+fig, ax = plt.subplots()
+ax.plot(x, y1, label="reta", color="black", linestyle="--")
+ax.plot(x, y2, label="quadrática", color="tab:blue")
+ax.plot(x, y3, label="cúbica", color="tab:orange")
+ax.legend(); ax.grid(True)
+plt.show()</code></pre>
+        </section>
+      </section>
+
+      <!-- SUBPLOTS -->
+      <section>
+        <section>
+          <h2>Múltiplos gráficos (Subplots)</h2>
+<pre><code class="language-python">fig, axs = plt.subplots(1, 3, figsize=(10, 3), sharex=True)
+axs[0].plot(x, y1); axs[0].set_title("Reta")
+axs[1].plot(x, y2); axs[1].set_title("Quadrática")
+axs[2].plot(x, y3); axs[2].set_title("Cúbica")
+for ax in axs: ax.grid(True)
+fig.suptitle("Comparação de funções")
+fig.tight_layout()
+plt.show()</code></pre>
+          <p class="note">Útil para comparar múltiplos conjuntos de dados.</p>
+        </section>
+      </section>
+
+      <!-- BARRAS / PIZZA -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Gráfico de Barras</h2>
+<pre><code class="language-python">categorias = ["A", "B", "C", "D"]
+valores = [12, 7, 15, 9]
+
+fig, ax = plt.subplots()
+ax.bar(categorias, valores, color="tab:green")
+ax.set_title("Barras")
+ax.set_ylabel("Valor")
+for i, v in enumerate(valores):
+    ax.text(i, v + .3, str(v), ha="center")
+plt.show()</code></pre>
+          </div>
+          <div>
+            <h2>Gráfico de Pizza (Pie)</h2>
+<pre><code class="language-python">labels = ["Maçã", "Banana", "Laranja", "Uva"]
+sizes  = [30, 25, 25, 20]
+
+fig, ax = plt.subplots()
+ax.pie(sizes, labels=labels, autopct="%1.1f%%", startangle=90)
+ax.axis("equal")  # deixa circular
+ax.set_title("Preferências")
+plt.show()</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- SCATTER / HISTOGRAM -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Dispersão (Scatter)</h2>
+<pre><code class="language-python">rng = np.random.default_rng(42)
+x = rng.normal(loc=50, scale=10, size=200)
+y = 0.8*x + rng.normal(scale=5, size=200)
+
+fig, ax = plt.subplots()
+ax.scatter(x, y, alpha=0.7, edgecolor="k")
+ax.set_title("Correlação aproximada")
+ax.set_xlabel("X"); ax.set_ylabel("Y")
+plt.show()</code></pre>
+          </div>
+          <div>
+            <h2>Histograma</h2>
+<pre><code class="language-python">data = rng.normal(loc=0, scale=1, size=1000)
+fig, ax = plt.subplots()
+ax.hist(data, bins=30, color="tab:purple", alpha=0.8)
+ax.set_title("Distribuição Normal")
+ax.set_xlabel("Valor"); ax.set_ylabel("Frequência")
+plt.show()</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- BOXPLOT -->
+      <section>
+        <section>
+          <h2>Boxplot</h2>
+<pre><code class="language-python">dados = [rng.normal(0, 1, 200),
+         rng.normal(1, 1.5, 200),
+         rng.normal(-1, 0.5, 200)]
+
+fig, ax = plt.subplots()
+ax.boxplot(dados, labels=["A", "B", "C"], notch=True)
+ax.set_title("Distribuições — Boxplot")
+plt.show()</code></pre>
+          <p class="note">Resumo robusto: mediana, quartis e possíveis <em>outliers</em>.</p>
+        </section>
+      </section>
+
+      <!-- LENDO CSV (PANDAS) -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Lendo dados de <code>.csv</code> (Pandas)</h2>
+<pre><code class="language-python">import pandas as pd
+
+df = pd.read_csv("vendas.csv")  # colunas: categoria, total
+fig, ax = plt.subplots()
+ax.bar(df["categoria"], df["total"], color="tab:blue")
+ax.set_title("Vendas por categoria")
+ax.set_ylabel("Total")
+plt.show()</code></pre>
+          </div>
+          <div>
+            <h2>Barras horizontais (CSV)</h2>
+<pre><code class="language-python">fig, ax = plt.subplots()
+ordenado = df.sort_values("total")
+ax.barh(ordenado["categoria"], ordenado["total"], color="tab:orange")
+ax.set_title("Vendas (ordem crescente)")
+ax.set_xlabel("Total")
+plt.show()</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- ESTILOS / EXPORTAÇÃO -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Estilos & Layout</h2>
+<pre><code class="language-python">plt.style.use("seaborn-v0_8")   # aplica estilo global
+fig, ax = plt.subplots()
+ax.plot(np.linspace(0,1,50), np.linspace(0,1,50)**2)
+fig.tight_layout()              # ajusta espaçamentos
+plt.show()</code></pre>
+          </div>
+          <div>
+            <h2>Exportando figuras</h2>
+<pre><code class="language-python">fig, ax = plt.subplots()
+ax.plot([0,1,2], [2,1,3])
+fig.savefig("grafico.png", dpi=300, bbox_inches="tight")
+fig.savefig("grafico.pdf")</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- CLASSES AUXILIARES (EXTRA) -->
+      <section>
+        <section>
+          <h2>Encapsulando em classes (extra)</h2>
+<pre><code class="language-python">class GraficoLinha:
+    def __init__(self, x, y, titulo="Linha"):
+        self.x, self.y, self.titulo = x, y, titulo
+    def plot(self):
+        fig, ax = plt.subplots()
+        ax.plot(self.x, self.y)
+        ax.set_title(self.titulo)
+        ax.grid(True); plt.show()
+
+# Uso
+g = GraficoLinha(np.arange(0, 5), np.arange(0, 5)**2, "Quadrática")
+g.plot()</code></pre>
+          <p class="note">Padrão inspirado no material: organizar gráficos via classes auxiliares.</p>
+        </section>
+      </section>
+
+      <!-- EXERCICIOS -->
+      <section>
+        <section>
+          <h2>Exercícios (Lab)</h2>
+          <ol>
+            <li>Replique o gráfico de linha, curva de 2º e 3º grau em <strong>subplots</strong>.</li>
+            <li>Gere um <strong>scatter</strong> com 2 clusters e destaque as médias.</li>
+            <li>Abra um <strong>CSV</strong> de vendas e plote barras horizontais ordenadas.</li>
+            <li>Exporte um gráfico para <strong>PNG</strong> e <strong>PDF</strong> com <code>bbox_inches="tight"</code>.</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- CONCLUSÕES -->
+      <section>
+        <h2>Conclusões</h2>
+        <ul>
+          <li>Matplotlib oferece base sólida e flexível para visualizações 2D.</li>
+          <li>Domine Figure/Axes, personalização e subplots para ganhar produtividade.</li>
+          <li>Integração com NumPy/Pandas e exportação facilitam o fluxo de análise.</li>
+        </ul>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <!-- Reveal.js highlight plugin (bundles highlight.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      plugins: [ RevealHighlight ]
+    });
+  </script>
+</body>
+</html>
