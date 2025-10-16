@@ -1,6 +1,6 @@
 # Criando uma Agenda simples POO
 
-A aplicação fas o cadastro de pessoas e salva em um arquivo texto .csv
+A aplicação faz o cadastro (inserir, listar) de pessoas e salva em um arquivo texto .csv
 
 Código da aplicação disponível em https://github.com/ufpi-lp/lp2025-2/tree/main/agenda
 
