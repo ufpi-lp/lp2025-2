@@ -44,7 +44,7 @@ sequenceDiagram
 - **Componentes:** Repositórios, DAOs, APIs
 - **Responsabilidades:**
   - CRUD (Create, Read, Update, Delete)
-  - Acesso a bancos de dados
+  - Acesso a arquivos ou bancos de dados
   - Integração com serviços externos
 
 ## **Vantagens do Modelo:**
