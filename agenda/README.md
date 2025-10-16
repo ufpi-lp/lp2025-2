@@ -14,6 +14,8 @@ pip install readchar
 ```bash
 python3 main.py
 ```
+
+![Tela Principal](tela_principal.png)
 ## Observação
 
 O módulo cadastro.py requer uma modificação na classe ```CadastroPessoasService``` para garantir o funcionamento adequado em ambiente Windows.
