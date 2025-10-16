@@ -332,7 +332,7 @@ from app.text.rich.telas import Menu, CadastroPessoasTela
    - Recupera dados do service
    - Exibe em tabela formatada
 
-5. **Persistência** (`cadastro.py`)
+5. **Serviço/Persistência** (`cadastro.py`)
    - Salva automaticamente ao sair
    - Carrega automaticamente ao iniciar
 
