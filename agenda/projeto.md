@@ -24,7 +24,7 @@ agenda
 ├── 📦 PACOTE APP
 │   ├── 🎯 SERVIÇOS
 │   │   └── cadastro.py
-│   └── 🎨 INTERFACE
+│   └── 🎨 INTERFACE UI
 │       └── text/rich/telas.py
 └── 💾 DADOS
     └── pessoas.csv
