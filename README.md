@@ -34,6 +34,8 @@ Turma de Laboratório de Programação UFPI 2025.2 (Departamento de Computação
 
 Introdução a biblioteca [Pandas](https://pandas.pydata.org/)
 
+Exemplo de Notebook com [exemplos de uso básico do Pandas](https://github.com/ufpi-lp/lp2025-2/blob/main/introducao_ao_pandas.ipynb)
+
 Introdução a biblioteca [GeoPandas](https://geopandas.org/en/stable)
 
 Introdução a programação GUI (Graphical User Interface) com o toolkit [Tkinter](https://github.com/armandossrecife/mytkinter)
