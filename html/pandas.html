@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apresentação — Básico de Análise de Dados com Python & Pandas</title>
+
+  <!-- Reveal.js core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <!-- Light Theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+
+  <!-- Highlight.js (syntax highlighting for code) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      --r-heading-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .reveal pre code { font-size: 1.05em; line-height: 1.25; tab-size: 4; }
+    .reveal section h1, .reveal section h2, .reveal section h3 { letter-spacing: 0.2px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .85em; opacity: .9; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: rgba(0,0,0,.06); font-size: .8em; }
+    table { width: 100%; font-size: .9em; border-collapse: collapse; }
+    th, td { border: 1px solid #bbb; padding: 6px 10px; }
+    th { background: #f6f8fa; }
+    .small code { font-size: .9em; }
+    .center { text-align: center; }
+    .ok { color: #1a7f37; }
+    .warn { color: #b35900; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- CAPA -->
+      <section>
+        <h1>Básico de Análise de Dados com Python & Pandas</h1>
+        <p>Lab de Programação / Ciência da Computação</p>
+        <p class="note">Conceitos essenciais, fluxo de trabalho, e operações fundamentais em <strong>Pandas</strong> — com <span class="badge">syntax highlighting</span></p>
+      </section>
+
+      <!-- OBJETIVOS -->
+      <section>
+        <section>
+          <h2>Objetivos da Aula</h2>
+          <ul>
+            <li>Entender o que é <strong>análise de dados</strong> e o fluxo de trabalho básico.</li>
+            <li>Conhecer as estruturas centrais do Pandas: <strong>Series</strong> e <strong>DataFrame</strong>.</li>
+            <li>Aprender a <strong>carregar</strong>, <strong>inspecionar</strong>, <strong>limpar</strong>, <strong>transformar</strong> e <strong>agregar</strong> dados.</li>
+            <li>Realizar junções, pivôs e <strong>visualizar</strong> resultados rapidamente.</li>
+          </ul>
+        </section>
+        <section class="two-col">
+          <div>
+            <h3>Instalação</h3>
+<pre><code class="language-bash"># ambiente recomendado
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install pandas matplotlib pyarrow # (opcional: jupyter)
+</code></pre>
+          </div>
+          <div>
+            <h3>Importação</h3>
+<pre><code class="language-python">import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+pd.__version__
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- CONCEITOS ANALISE -->
+      <section>
+        <section>
+          <h2>O que é Análise de Dados?</h2>
+          <ul>
+            <li>Processo de obter <strong>insights</strong> a partir de dados (tabelas, logs, planilhas...).</li>
+            <li>Etapas: <strong>Coleta → Limpeza → Exploração → Modelagem → Comunicação</strong>.</li>
+            <li class="note">Nesta aula focaremos em <strong>limpeza</strong>, <strong>exploração</strong> e <strong>comunicação</strong> com Pandas.</li>
+          </ul>
+        </section>
+        <section class="two-col">
+          <div>
+            <h3>Dados Tabulares (Tidy)</h3>
+            <ul>
+              <li>Cada linha = uma <strong>observação</strong>.</li>
+              <li>Cada coluna = uma <strong>variável</strong>.</li>
+              <li>Cada célula = um <strong>valor</strong>.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Tipos Comuns</h3>
+            <ul>
+              <li>Numéricos: <code>int</code>, <code>float</code></li>
+              <li>Categóricos / Strings</li>
+              <li>Datas & tempos (<code>datetime</code>)</li>
+              <li>Booleanos</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- SERIES E DATAFRAME -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Estruturas do Pandas</h2>
+            <ul>
+              <li><strong>Series</strong>: vetor 1D com rótulos (índice).</li>
+              <li><strong>DataFrame</strong>: tabela 2D (linhas × colunas).</li>
+              <li>Índice facilita <strong>alinhamento</strong>, <strong>seleção</strong> e <strong>operações</strong>.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Criação Rápida</h3>
+<pre><code class="language-python">s = pd.Series([10, 20, 30], index=["a","b","c"])
+df = pd.DataFrame({
+    "aluno": ["Ana","João","Bia"],
+    "nota": [9.1, 7.5, 8.3],
+    "aprovado": [True, False, True]
+})
+s, df.head()
+</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Carregar Arquivos</h3>
+<pre><code class="language-python">df = pd.read_csv("dados.csv")          # CSV
+df = pd.read_excel("planilha.xlsx")    # Excel
+df = pd.read_json("dados.json")        # JSON
+df = pd.read_parquet("tabela.parquet") # Parquet (rápido)
+</code></pre>
+          </div>
+          <div>
+            <h3>Salvar Arquivos</h3>
+<pre><code class="language-python">df.to_csv("saida.csv", index=False)
+df.to_excel("saida.xlsx", index=False)
+df.to_parquet("saida.parquet")
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- INSPECAO E TIPOS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Inspeção Inicial</h2>
+<pre><code class="language-python">df.head()      # primeiras linhas
+df.tail()      # últimas linhas
+df.shape       # (linhas, colunas)
+df.columns     # nomes das colunas
+df.info()      # tipos e nulos
+df.describe(numeric_only=True)
+</code></pre>
+          </div>
+          <div>
+            <h2>Tipos & Conversões</h2>
+<pre><code class="language-python">df.dtypes
+df["data"] = pd.to_datetime(df["data"], dayfirst=True, errors="coerce")
+df["categoria"] = df["categoria"].astype("category")
+df["preco"] = pd.to_numeric(df["preco"], errors="coerce")
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- SELECAO E FILTRAGEM -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Seleção por Rótulo/Posição</h2>
+<pre><code class="language-python"># colunas
+df["nota"]                      # Series
+df[["aluno","nota"]].head(3)    # DataFrame
+
+# linhas por rótulo/posição
+df.loc[0:3, ["aluno","nota"]]   # rótulos
+df.iloc[0:3, 0:2]               # posições
+</code></pre>
+          </div>
+          <div>
+            <h2>Filtragem Booleana</h2>
+<pre><code class="language-python">aprovados = df[df["nota"] >= 7.0]
+filtro = (df["nota"] >= 7) & (df["categoria"] == "A")
+resultado = df.loc[filtro, ["aluno","nota","categoria"]]
+</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Valores Ausentes</h3>
+<pre><code class="language-python">df.isna().sum()
+df2 = df.fillna({"nota": df["nota"].mean()})
+df3 = df.dropna(subset=["nota","aluno"])
+</code></pre>
+          </div>
+          <div>
+            <h3>Colunas Derivadas</h3>
+<pre><code class="language-python">df["nota_pad"] = (df["nota"] - df["nota"].mean()) / df["nota"].std()
+df["status"] = np.where(df["nota"] >= 7, "Aprovado", "Reprovado")
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- AGRUPAMENTOS E AGREGACOES -->
+      <section>
+        <section>
+          <h2>GroupBy & Agregações</h2>
+<pre><code class="language-python"># estatísticas por categoria
+grp = df.groupby("categoria")["nota"]
+resumo = grp.agg(["count","mean","std","min","max"]).reset_index()
+resumo.sort_values("mean", ascending=False)
+</code></pre>
+          <p class="note">Use <code>.agg()</code> para múltiplas métricas; <code>.transform()</code> para adicionar resultados por linha.</p>
+        </section>
+        <section class="two-col">
+          <div>
+            <h3>Pivot / Crosstab</h3>
+<pre><code class="language-python"># tabela dinâmica
+pv = pd.pivot_table(
+    df, values="nota", index="categoria", columns="turma",
+    aggfunc="mean", fill_value=0
+)
+
+# frequência cruzada
+xt = pd.crosstab(df["turma"], df["status"], normalize="index")
+</code></pre>
+          </div>
+          <div>
+            <h3>Ordenação & Top-N</h3>
+<pre><code class="language-python">top = df.sort_values(["nota","aluno"], ascending=[False, True]).head(10)
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- JUNCOES E CONCAT -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Junções (Merge)</h2>
+<pre><code class="language-python">alunos = pd.DataFrame({"id":[1,2], "aluno":["Ana","João"]})
+notas  = pd.DataFrame({"id":[1,1,2], "disc":["Mat","Fis","Mat"], "nota":[9,8,7]})
+
+dfm = pd.merge(alunos, notas, on="id", how="left")  # inner/left/right/outer
+</code></pre>
+          </div>
+          <div>
+            <h2>Concatenação (Concat)</h2>
+<pre><code class="language-python">part1 = df.iloc[:100]
+part2 = df.iloc[100:]
+df_full = pd.concat([part1, part2], axis=0, ignore_index=True)
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- TEMPO E PLOTS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Datas & Séries Temporais</h2>
+<pre><code class="language-python">df["data"] = pd.to_datetime(df["data"])
+df = df.set_index("data").sort_index()
+
+mensal = df["nota"].resample("M").mean()   # A, Q, M, W, D...
+rolling = df["nota"].rolling(7).mean()     # média móvel 7 períodos
+</code></pre>
+          </div>
+          <div>
+            <h2>Plot Rápido (Pandas+Matplotlib)</h2>
+<pre><code class="language-python">ax = mensal.plot(kind="line", marker="o", figsize=(7,3), grid=True)
+ax.set_title("Média Mensal da Nota")
+plt.tight_layout(); plt.show()
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- PERFORMANCE E BOAS PRATICAS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Dicas de Performance</h2>
+            <ul>
+              <li>Prefira operações <strong>vetorizadas</strong> (evite loops Python).</li>
+              <li>Use <code>categorical</code> para colunas com poucos valores distintos.</li>
+              <li>Para dados grandes: formatos binários (<code>parquet</code>) e <strong>chunks</strong> na leitura.</li>
+              <li><code>df.memory_usage(deep=True)</code> para medir memória.</li>
+            </ul>
+          </div>
+          <div>
+            <h2>Boas Práticas</h2>
+            <ul>
+              <li>Documente suposições e decisões de limpeza.</li>
+              <li>Crie funções reutilizáveis para etapas repetitivas.</li>
+              <li>Salve resultados intermediários (CSV/Parquet) com versões.</li>
+              <li>Valide tipos e nulos após importação.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- CHECKLIST -->
+      <section>
+        <section>
+          <h2>Checklist do Fluxo (EDA)</h2>
+          <ul>
+            <li><span class="ok">Importar</span> dados e verificar <span class="ok">shape/colunas</span>.</li>
+            <li><span class="ok">Tipos corretos</span> (numérico, categoria, data).</li>
+            <li><span class="ok">Nulos</span>: tratar <code>fillna</code>/<code>dropna</code>.</li>
+            <li><span class="ok">Outliers</span> e estatísticas (<code>describe</code>).</li>
+            <li><span class="ok">Agregações</span>, <span class="ok">pivôs</span> e <span class="ok">joins</span> necessários.</li>
+            <li><span class="ok">Gráficos</span> para comunicar achados.</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- EXERCICIOS -->
+      <section>
+        <section>
+          <h2>Exercícios (Lab)</h2>
+          <ol>
+            <li>Carregue um CSV de vendas e reporte: linhas, colunas, <code>info()</code>, <code>describe()</code>.</li>
+            <li>Converta colunas de data e preço para tipos adequados; trate nulos.</li>
+            <li>Crie colunas derivadas (ex.: <code>receita = qtd * preco</code>).</li>
+            <li>Faça <strong>groupby</strong> por categoria e por mês; gere um pivô (categoria × mês) com soma de receita.</li>
+            <li>Plote a série mensal total (linha) e o top-5 de categorias (barras horizontais).</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- CONCLUSAO -->
+      <section>
+        <h2>Conclusões</h2>
+        <ul>
+          <li><strong>Pandas</strong> facilita ingestão, limpeza, transformação e exploração tabular.</li>
+          <li>Domine seleção/filtragem, agregações, pivôs e junções para produtividade.</li>
+          <li>Integre com <strong>Matplotlib</strong> para visualizações rápidas e comunicativas.</li>
+        </ul>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <!-- Reveal.js highlight plugin (bundles highlight.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      plugins: [ RevealHighlight ]
+    });
+  </script>
+</body>
+</html>
