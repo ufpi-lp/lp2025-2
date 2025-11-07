@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Boas Práticas e Modularidade em Python</title>
+
+  <!-- Reveal.js (tema claro) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+  <!-- Highlight.js (syntax highlighting) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
+      --r-heading-font: var(--r-main-font);
+    }
+    .reveal pre code { font-size: 1.02em; line-height: 1.35; tab-size: 4; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .9em; opacity: .85; }
+    .badge { display:inline-block; padding:2px 8px; border-radius:10px; background:rgba(0,0,0,.06); font-size:.8em; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { border:1px solid #ddd; padding:8px 10px; }
+    th { background:#f6f8fa; }
+    ul.tight > li { margin: .25em 0; }
+    code.kbd { background:#f6f8fa; border:1px solid #e1e4e8; border-radius:4px; padding:1px 6px; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- CAPA -->
+<section>
+  <h1>Boas Práticas & Modularidade em Python</h1>
+  <p>Laboratório de Programação — Ciência da Computação</p>
+  <p class="note">PEP 8, legibilidade, testes, tratamento de exceções, módulos, pacotes, imports e ambientes virtuais.</p>
+</section>
+
+<!-- POR QUE BOAS PRÁTICAS -->
+<section>
+  <section>
+    <h2>Por que Boas Práticas?</h2>
+    <ul>
+      <li>Código <strong>legível</strong>, <strong>manutenível</strong> e <strong>testável</strong>.</li>
+      <li>Facilita colaboração, revisão e evolução do projeto.</li>
+      <li>Reduz bugs e custos de manutenção.</li>
+    </ul>
+    <p class="note"><span class="badge">Dica</span> Adote um guia de estilo (PEP 8) e automatize checagens no CI.</p>
+  </section>
+  <section class="two-col">
+    <div>
+      <h3>PEP 8 (estilo)</h3>
+      <ul class="tight">
+        <li>Indentação: 4 espaços</li>
+        <li>Linhas ≤ 79 colunas</li>
+        <li>snake_case para funções/variáveis</li>
+        <li>CapWords para classes</li>
+      </ul>
+<pre><code class="language-python"># bom
+def calcular_media(notas: list[float]) -> float:
+    return sum(notas) / len(notas)
+</code></pre>
+    </div>
+    <div>
+      <h3>Nomes descritivos</h3>
+<pre><code class="language-python"># ruim
+def f(x): return x*x + 2*x + 1
+
+# bom
+def parabola(valor: float) -> float:
+    return valor*valor + 2*valor + 1
+</code></pre>
+    </div>
+  </section>
+</section>
+
+<!-- COMENTÁRIOS, DOCSTRINGS, ORGANIZAÇÃO -->
+<section>
+  <section class="two-col">
+    <div>
+      <h2>Comentários & Docstrings</h2>
+<pre><code class="language-python">def calcular_fatorial(n: int) -> int:
+    """Calcula o fatorial de n (n >= 0).
+    Retorna:
+        int: n!
+    """
+    if n &lt; 0:
+        raise ValueError("n deve ser não-negativo")
+    return 1 if n == 0 else n * calcular_fatorial(n-1)
+</code></pre>
+      <p class="note">Use docstrings para <em>o quê</em> e <em>por quê</em>. Comentários em linha para o <em>como</em> quando necessário.</p>
+    </div>
+    <div>
+      <h2>Organização</h2>
+      <ul>
+        <li>Arquivos curtos, funções pequenas e coesas.</li>
+        <li>Separe responsabilidade: lógica vs. I/O.</li>
+        <li>Estruture pastas por domínio e camadas.</li>
+      </ul>
+<pre><code class="language-bash">meu_projeto/
+├─ meu_projeto/
+│  ├─ __init__.py
+│  ├─ dominio/
+│  │  ├─ __init__.py
+│  │  └─ pedidos.py
+│  ├─ infra/
+│  │  ├─ __init__.py
+│  │  └─ repositorio.py
+│  └─ app.py
+├─ tests/
+│  └─ test_pedidos.py
+└─ requirements.txt
+</code></pre>
+    </div>
+  </section>
+</section>
+
+<!-- VALIDAÇÃO, EXCEÇÕES, I/O -->
+<section>
+  <section class="two-col">
+    <div>
+      <h2>Validação de Entrada</h2>
+<pre><code class="language-python">def ler_inteiro(prompt="Digite um número inteiro: ") -> int:
+    while True:
+        valor = input(prompt).strip()
+        if valor.lstrip("-").isdigit():
+            return int(valor)
+        print("Entrada inválida. Tente novamente.")
+</code></pre>
+    </div>
+    <div>
+      <h2>Tratamento de Exceções</h2>
+<pre><code class="language-python">from pathlib import Path
+
+def carregar_arquivo(caminho: str) -> str:
+    try:
+        return Path(caminho).read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return "Arquivo não encontrado."
+    except OSError as e:
+        return f"Erro de I/O: {e}"
+</code></pre>
+      <p class="note">Capture apenas o que você sabe tratar; registre o restante.</p>
+    </div>
+  </section>
+  <section class="two-col">
+    <div>
+      <h2>I/O com segurança</h2>
+<pre><code class="language-python">from pathlib import Path
+
+def salvar_texto(caminho: str, conteudo: str) -> None:
+    p = Path(caminho)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(conteudo, encoding="utf-8")
+</code></pre>
+    </div>
+    <div>
+      <h2>Evite repetição</h2>
+<pre><code class="language-python"># centralize lógica comum em funções
+def media(valores: list[float]) -> float:
+    return sum(valores)/len(valores) if valores else 0.0
+</code></pre>
+    </div>
+  </section>
+</section>
+
+<!-- TESTES E DOCUMENTAÇÃO -->
+<section>
+  <section class="two-col">
+    <div>
+      <h2>Testes Unitários</h2>
+<pre><code class="language-python"># tests/test_media.py
+import pytest
+from meu_projeto.dominio.pedidos import media
+
+def test_media_lista():
+    assert media([1,2,3]) == 2
+
+def test_media_vazia():
+    assert media([]) == 0.0
+</code></pre>
+      <p class="note">Use <code>pytest</code>, mocks para I/O e rode no CI.</p>
+    </div>
+    <div>
+      <h2>Documentação</h2>
+      <ul>
+        <li>Docstrings + README + exemplos executáveis.</li>
+        <li>Comente decisões de design relevantes.</li>
+      </ul>
+<pre><code class="language-python">def calcular_imposto(salario: float) -> float:
+    """Calcula IR estimado (didático).
+    Parâmetros:
+        salario (float): salário bruto.
+    Retorno:
+        float: imposto devido.
+    """
+    return max(salario * 0.15, 0.0)
+</code></pre>
+    </div>
+  </section>
+</section>
+
+<!-- CONTROLE DE FLUXO E LEGIBILIDADE -->
+<section>
+  <section class="two-col">
+    <div>
+      <h2>Condicionais Claras</h2>
+<pre><code class="language-python">def faixa_etaria(idade: int) -> str:
+    if idade &lt; 0:
+        raise ValueError("Idade inválida")
+    if idade &lt; 18:
+        return "menor"
+    if idade &lt;= 65:
+        return "adulto"
+    return "idoso"
+</code></pre>
+    </div>
+    <div>
+      <h2>Loops com parada</h2>
+<pre><code class="language-python">def coletar_nomes():
+    nomes = []
+    while True:
+        nome = input("Nome (ou 'sair'): ").strip()
+        if nome.lower() == "sair":
+            break
+        if nome:
+            nomes.append(nome)
+    return nomes
+</code></pre>
+    </div>
+  </section>
+</section>
+
+<!-- FUNÇÕES: TAMANHO, PARÂMETROS, PUREZA -->
+<section>
+  <section class="three-col">
+    <div>
+      <h2>Funções pequenas</h2>
+<pre><code class="language-python">def calcular_area_retangulo(larg: float, comp: float) -> float:
+    return larg * comp
+</code></pre>
+    </div>
+    <div>
+      <h2>Parâmetros & retorno</h2>
+<pre><code class="language-python">def salario_liquido(bruto: float, descontos: float) -> float:
+    return bruto - descontos
+</code></pre>
+    </div>
+    <div>
+      <h2>Evite efeitos colaterais</h2>
+<pre><code class="language-python">def dobrar_lista(nums: list[int]) -> list[int]:
+    # retorna nova lista, não muta a original
+    return [n*2 for n in nums]
+</code></pre>
+    </div>
+  </section>
+</section>
+
+<!-- MODULARIDADE: CONCEITOS -->
+<section>
+  <section>
+    <h2>Modularidade — Conceitos</h2>
+    <ul>
+      <li><strong>Módulo</strong>: unidade autônoma com interface clara.</li>
+      <li><strong>Coesão</strong>: uma responsabilidade por módulo.</li>
+      <li><strong>Acoplamento</strong>: dependências mínimas.</li>
+      <li><strong>Abstração/Encapsulamento</strong>: esconda detalhes, exponha o essencial.</li>
+    </ul>
+  </section>
+  <section class="two-col">
+    <div>
+      <h3>Decomposição</h3>
+      <ul>
+        <li>Funcional (procedural)</li>
+        <li>Orientada a Objetos</li>
+        <li>Por camadas/domínios</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Boas práticas</h3>
+      <ul>
+        <li>Módulos pequenos e coesos</li>
+        <li>Nomes e interfaces significativas</li>
+        <li>Testes unitários por módulo</li>
+        <li>Revisão de código</li>
+      </ul>
+    </div>
+  </section>
+</section>
+
+<!-- MODULARIDADE EM PYTHON -->
+<section>
+  <section class="two-col">
+    <div>
+      <h2>Módulos em Python</h2>
+<pre><code class="language-python"># modulo1.py
+def saudacao(nome: str) -> None:
+    print(f"Olá, {nome}!")
+
+def soma(a: float, b: float) -> float:
+    return a + b
+</code></pre>
+<pre><code class="language-python"># programa_principal.py
+import modulo1
+modulo1.saudacao("Mundo")
+print(modulo1.soma(2, 3))
+</code></pre>
+    </div>
+    <div>
+      <h2>Pacotes</h2>
+<pre><code class="language-bash">meu_app/
+├─ __init__.py
+├─ contas/
+│  ├─ __init__.py
+│  ├─ banco.py
+│  └─ investimentos.py
+└─ utils/
+   ├─ __init__.py
+   └─ datas.py
+</code></pre>
+<pre><code class="language-python">from meu_app.contas import banco, investimentos
+</code></pre>
+    </div>
+  </section>
+  <section>
+    <h2>__init__.py & __all__</h2>
+<pre><code class="language-python"># meu_app/__init__.py
+__all__ = ["contas", "utils"]
+</code></pre>
+    <p class="note">Controla o que é exposto em <code>from meu_app import *</code> e pode conter código de inicialização do pacote.</p>
+  </section>
+</section>
+
+<!-- MECANISMO DE IMPORTAÇÃO -->
+<section>
+  <section class="two-col">
+    <div>
+      <h2>Formas de importar</h2>
+<pre><code class="language-python">import modulo1
+from modulo1 import saudacao, soma
+import modulo1 as md1
+# evitar na maioria dos casos:
+# from modulo1 import *
+</code></pre>
+      <p class="note">Namespaces evitam conflitos. Prefira imports explícitos.</p>
+    </div>
+    <div>
+      <h2>Built-in Modules (exemplos)</h2>
+<pre><code class="language-python">import math, random, os, sys, json, csv, re, datetime
+
+print(math.sqrt(16))      # 4.0
+print(random.randint(1,3))# 1..3
+print(os.getcwd())        # diretório atual
+</code></pre>
+    </div>
+  </section>
+</section>
+
+<!-- TERCEIROS E PIP -->
+<section>
+  <section class="two-col">
+    <div>
+      <h2>Pacotes de Terceiros (PyPI)</h2>
+<pre><code class="language-bash"># instalar
+pip install numpy pandas requests
+
+# requirements
+pip freeze &gt; requirements.txt
+pip install -r requirements.txt
+</code></pre>
+<pre><code class="language-python">import pandas as pd
+df = pd.DataFrame({"Nome":["Ana","Bob"], "Idade":[20,22]})
+print(df)
+</code></pre>
+    </div>
+    <div>
+      <h2>Boas práticas</h2>
+      <ul>
+        <li>Leia a documentação</li>
+        <li>Use versões fixadas quando necessário</li>
+        <li>Ambientes virtuais por projeto</li>
+      </ul>
+    </div>
+  </section>
+</section>
+
+<!-- AMBIENTES VIRTUAIS -->
+<section>
+  <section>
+    <h2>Ambientes Virtuais (venv / virtualenv)</h2>
+    <p>Isolam dependências por projeto, evitam conflitos e facilitam a portabilidade.</p>
+    <table>
+      <thead><tr><th>Característica</th><th>venv</th><th>virtualenv</th></tr></thead>
+      <tbody>
+        <tr><td>Padrão no Python</td><td>Sim (3.3+)</td><td>Não</td></tr>
+        <tr><td>Facilidade</td><td>Integrado e simples</td><td>Mais recursos</td></tr>
+        <tr><td>Compatibilidade</td><td>Python 3.3+</td><td>Versões antigas também</td></tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="two-col">
+    <div>
+      <h3>venv (recomendado)</h3>
+<pre><code class="language-bash">cd meu_projeto
+python -m venv .venv
+# ativar
+# Linux/macOS:
+source .venv/bin/activate
+# Windows:
+# .venv\Scripts\activate
+pip install -r requirements.txt
+deactivate
+</code></pre>
+    </div>
+    <div>
+      <h3>requirements.txt</h3>
+<pre><code class="language-bash">numpy==2.1.0
+pandas==2.2.2
+requests==2.32.0
+</code></pre>
+    </div>
+  </section>
+</section>
+
+<!-- DESEMPENHO E PERFIS -->
+<section>
+  <section class="two-col">
+    <div>
+      <h2>Performance: ideias rápidas</h2>
+      <ul>
+        <li>Escolha estruturas adequadas (list, set, dict)</li>
+        <li>Evite I/O em loops apertados</li>
+        <li>Use algoritmos eficientes (ex.: <code>sorted</code>)</li>
+      </ul>
+<pre><code class="language-python">nums = [1,2,3,4,5]
+soma = sum(nums)          # em vez de loop manual
+ordenado = sorted(nums)   # Timsort otimizado
+</code></pre>
+    </div>
+    <div>
+      <h2>Perfil e medição</h2>
+<pre><code class="language-python">import time
+
+t0 = time.perf_counter()
+# ... código ...
+dt = time.perf_counter() - t0
+print(f"Tempo: {dt:.6f}s")
+</code></pre>
+      <p class="note">Mensure antes de otimizar. Use <code>cProfile</code> para perfis detalhados.</p>
+    </div>
+  </section>
+</section>
+
+<!-- CHECKLIST FINAL -->
+<section>
+  <section>
+    <h2>Checklist de Boas Práticas</h2>
+    <ul>
+      <li>PEP 8 e nomes descritivos</li>
+      <li>Docstrings e comentários úteis</li>
+      <li>Validação de entrada e exceções bem tratadas</li>
+      <li>Testes unitários e estrutura modular</li>
+      <li>Imports explícitos; use pacotes e ambientes virtuais</li>
+      <li>Documentação e exemplos executáveis</li>
+    </ul>
+  </section>
+</section>
+
+<!-- CONCLUSÕES -->
+<section>
+  <h2>Conclusões</h2>
+  <ul>
+    <li>Boas práticas tornam seu código sustentável e evolutivo.</li>
+    <li>Modularidade reduz acoplamento e aumenta reutilização.</li>
+    <li>Ambientes virtuais e gestão de dependências são essenciais.</li>
+  </ul>
+  <p class="note">Comece simples, automatize checagens e evolua continuamente.</p>
+</section>
+
+</div>
+</div>
+
+<!-- Reveal.js -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<!-- Highlight plugin (bundles highlight.js) -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    plugins: [ RevealHighlight ]
+  });
+</script>
+</body>
+</html>
