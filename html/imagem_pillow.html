@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Manipulação de Imagens com Python (Pillow)</title>
+
+  <!-- Reveal.js core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <!-- Light Theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+
+  <!-- Highlight.js (syntax highlighting for code) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      --r-heading-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .reveal pre code { font-size: 1.05em; line-height: 1.25; tab-size: 4; }
+    .reveal section h1, .reveal section h2, .reveal section h3 { letter-spacing: 0.2px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .85em; opacity: .9; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: rgba(0,0,0,.06); font-size: .8em; }
+    table { width: 100%; font-size: .9em; border-collapse: collapse; }
+    th, td { border: 1px solid #bbb; padding: 6px 10px; }
+    th { background: #f6f8fa; }
+    .ok { color: #1a7f37; }
+    .warn { color: #b35900; }
+    .center { text-align: center; }
+    .small code { font-size: .9em; }
+    ul.tight li { margin: 6px 0; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- CAPA -->
+      <section>
+        <h1>Manipulação de Imagens com Python (Pillow)</h1>
+        <p>Laboratório de Programação — Ciência da Computação</p>
+        <p class="note">Conceitos de imagem digital e operações com <strong>Pillow</strong> — com <span class="badge">syntax highlighting</span></p>
+      </section>
+
+      <!-- INTRO: O QUE É IMAGEM DIGITAL -->
+      <section>
+        <section>
+          <h2>Imagens Digitais — Visão Geral</h2>
+          <ul>
+            <li>Imagem digital = matriz de <strong>pixels</strong> (valores discretos).</li>
+            <li>Coordenadas <code>(x, y)</code> e intensidade/cor por pixel.</li>
+            <li>Propriedades: <strong>resolução</strong>, <strong>profundidade de cor</strong>, <strong>formato</strong>, <strong>proporção</strong>, <strong>canais</strong>, <strong>metadados</strong>.</li>
+          </ul>
+          <p class="note">Baseado no material “Manipulando Imagens com o Python”.</p>
+        </section>
+        <section class="two-col">
+          <div>
+            <h3>Resolução & Profundidade</h3>
+            <ul class="tight">
+              <li><strong>Resolução</strong>: largura × altura (px).</li>
+              <li><strong>Profundidade de cor</strong>: 8, 16, 24, 48 bits (faixa de cores).</li>
+              <li><strong>Canal alfa</strong>: transparência.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Formatos Típicos</h3>
+            <ul class="tight">
+              <li><strong>JPEG</strong>: compressão com perdas (fotos).</li>
+              <li><strong>PNG</strong>: sem perdas, suporta alfa (gráficos/logos).</li>
+              <li><strong>GIF</strong>: paleta reduzida, animação simples.</li>
+              <li><strong>TIFF</strong>: alta qualidade/arquivamento.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- PILLOW INTRO -->
+      <section>
+        <section>
+          <h2>Pillow (PIL) — Introdução</h2>
+          <ul>
+            <li>Biblioteca para <strong>abrir, manipular e salvar</strong> múltiplos formatos.</li>
+            <li>Operações: pixel a pixel, máscaras, transparência, filtros, desenho de texto/formas.</li>
+            <li>Documentação: <a href="https://pillow.readthedocs.io/en/stable/" target="_blank">pillow.readthedocs.io</a></li>
+          </ul>
+<pre><code class="language-bash">pip install Pillow
+</code></pre>
+        </section>
+        <section class="two-col">
+          <div>
+            <h3>Import e Abertura</h3>
+<pre><code class="language-python">from PIL import Image
+
+img = Image.open("foto.jpg")    # abre
+img.show()                      # exibe (visualizador do SO)
+print(img.size, img.mode, img.format)
+</code></pre>
+          </div>
+          <div>
+            <h3>Salvar em Diferentes Formatos</h3>
+<pre><code class="language-python"># Conversões simples
+img_png = img.convert("RGBA")
+img_png.save("saida.png")       # mantém alfa
+img_jpg = img.convert("RGB")
+img_jpg.save("saida.jpg", quality=90, optimize=True)
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- OPERAÇÕES BÁSICAS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Redimensionar, Cortar, Rotacionar</h2>
+<pre><code class="language-python">from PIL import Image
+
+img = Image.open("input.jpg")
+
+# Redimensionar
+thumb = img.resize((128, 128))            # tamanho fixo
+thumb.save("thumb.jpg")
+
+# Cortar (crop): caixa (esq, topo, dir, base)
+crop = img.crop((100, 100, 400, 400))
+crop.save("recorte.jpg")
+
+# Rotacionar
+rot = img.rotate(45, expand=True)
+rot.save("rotacao_45.png")
+</code></pre>
+          </div>
+          <div>
+            <h2>Qualidade, Modo e Metadados</h2>
+<pre><code class="language-python"># JPEG com qualidade
+img.save("foto_q80.jpg", quality=80, subsampling=1)
+
+# Modo de cor
+print(img.mode)         # "RGB", "RGBA", "L" (grayscale)...
+g = img.convert("L")    # escala de cinza
+g.save("cinza.png")
+
+# Metadados (EXIF) se disponíveis
+exif = img.getexif()
+print(dict(exif))
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- COMBINAR IMAGENS (DO SEU CÓDIGO) -->
+      <section>
+        <section>
+          <h2>Combinação de Imagens (lado a lado)</h2>
+          <p class="note">Exemplo inspirado no seu notebook/Colab.</p>
+<pre><code class="language-python">from PIL import Image
+
+# Abrir duas imagens
+img1 = Image.open("my_bike.jpeg")
+img2 = Image.open("my_bike2.jpeg")
+
+# Definir largura combinada
+largura_combinada = img1.width + img2.width
+altura = max(img1.height, img2.height)
+
+# Criar nova imagem (fundo branco)
+img_comb = Image.new("RGB", (largura_combinada, altura), color=(255,255,255))
+img_comb.paste(img1, (0, 0))
+img_comb.paste(img2, (img1.width, 0))
+
+img_comb.save("imagem_combinada.jpg")
+img_comb.show()
+</code></pre>
+        </section>
+      </section>
+
+      <!-- TEXTO E BORDAS (DO SEU CÓDIGO) -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Texto & Bordas em Imagens</h2>
+<pre><code class="language-python">from PIL import Image, ImageDraw, ImageFont
+
+img = Image.open("my_bike2.jpeg").convert("RGB")
+draw = ImageDraw.Draw(img)
+
+# Fonte (padrão ou .ttf)
+# fonte = ImageFont.truetype("arial.ttf", 24)
+fonte = ImageFont.load_default()
+
+# Texto
+draw.text((10, 10), "Estilo Pablo Picasso", font=fonte, fill=(255,255,255))
+
+# Borda (retângulo)
+esp = 5
+draw.rectangle([(0, 0), (img.width-1, img.height-1)],
+               outline=(0,0,0), width=esp)
+
+img.save("imagem_modificada.jpg")
+img.show()
+</code></pre>
+          </div>
+          <div>
+            <h2>Dicas de Tipografia</h2>
+            <ul class="tight">
+              <li>Prefira <code>ImageFont.truetype</code> para controle de tipo/tamanho.</li>
+              <li>Use <code>stroke_width</code>/<code>stroke_fill</code> (versões recentes) para contorno do texto.</li>
+              <li>Escolha cores contrastantes; avalie sombra/contorno para legibilidade.</li>
+              <li>Considere centralização: calcule <code>textbbox</code> para alinhar.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- MARCA D'ÁGUA (DO SEU CÓDIGO) -->
+      <section>
+        <section>
+          <h2>Marca d’água (logo com transparência)</h2>
+          <p class="note">A imagem do logo deve ter fundo transparente (canal alfa) para melhor fusão.</p>
+<pre><code class="language-python">from PIL import Image
+
+# Base e logo com RGBA (alfa)
+img  = Image.open("Software Engineer.jpeg").convert("RGBA")
+logo = Image.open("my_logo.png").convert("RGBA")
+
+# Redimensionar logo até 25% da imagem
+lw, lh = logo.size
+max_w, max_h = int(img.width*0.25), int(img.height*0.25)
+escala = min(max_w/lw, max_h/lh)
+logo_rs = logo.resize((int(lw*escala), int(lh*escala)))
+
+# Posição (canto inferior direito, margem 10px)
+pos = (img.width - logo_rs.width - 10, img.height - logo_rs.height - 10)
+
+# Compor preservando alfa do logo
+img.paste(logo_rs, pos, mask=logo_rs)
+
+# Salvar (PNG preserva transparência)
+img.save("imagem_com_marca_dagua.png")
+</code></pre>
+        </section>
+      </section>
+
+      <!-- THUMBNAIL (DO SEU CÓDIGO) -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Thumbnails Rápidos</h2>
+<pre><code class="language-python">from PIL import Image
+
+img = Image.open("my_bike.jpeg")
+tamanho = (128, 128)
+
+# resize: força o tamanho exato
+thumb = img.resize(tamanho)
+thumb.save("thumbnail.jpg")
+
+# alternativa: thumbnail mantém proporção e "encaixa"
+img2 = Image.open("my_bike.jpeg")
+img2.thumbnail(tamanho)              # altera in-place
+img2.save("thumbnail_proporcional.jpg")
+</code></pre>
+          </div>
+          <div>
+            <h2>Quando usar cada um?</h2>
+            <ul class="tight">
+              <li><code>resize</code>: quando você precisa de dimensões exatas (pode distorcer).</li>
+              <li><code>thumbnail</code>: quando precisa preservar a proporção original.</li>
+              <li>Para recorte não distorcido: combine <code>thumbnail</code> + <code>crop</code> central.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- FILTROS E DRAW AVANÇADO -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Filtros & Melhorias</h2>
+<pre><code class="language-python">from PIL import Image, ImageFilter, ImageEnhance
+
+img = Image.open("foto.jpg")
+
+# Filtros
+blur   = img.filter(ImageFilter.GaussianBlur(2))
+edges  = img.filter(ImageFilter.FIND_EDGES)
+sharp  = ImageEnhance.Sharpness(img).enhance(1.5)
+bright = ImageEnhance.Brightness(img).enhance(1.2)
+contr  = ImageEnhance.Contrast(img).enhance(1.2)
+
+blur.save("blur.jpg"); edges.save("edges.jpg")
+sharp.save("sharp.jpg")
+</code></pre>
+          </div>
+          <div>
+            <h2>Desenho de Formas</h2>
+<pre><code class="language-python">from PIL import Image, ImageDraw
+
+img = Image.open("fundo.png").convert("RGBA")
+draw = ImageDraw.Draw(img)
+
+# Linha, retângulo e círculo
+draw.line((10, 10, 200, 50), fill=(255,0,0,255), width=4)
+draw.rectangle((20, 70, 220, 170), outline=(0,0,255,255), width=3)
+draw.ellipse((250, 40, 340, 130), outline=(0,128,0,255), width=3)
+
+img.save("formas.png")
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- PIPELINE REPRODUTIVEL -->
+      <section>
+        <section>
+          <h2>Pipeline Reprodutível ( funções )</h2>
+<pre><code class="language-python">from PIL import Image, ImageDraw, ImageFont
+
+def combinar_lado_a_lado(a: str, b: str, out: str):
+    A, B = Image.open(a), Image.open(b)
+    w, h = A.width + B.width, max(A.height, B.height)
+    dest = Image.new("RGB", (w, h), (255,255,255))
+    dest.paste(A, (0, 0)); dest.paste(B, (A.width, 0))
+    dest.save(out); return out
+
+def marca_dagua(base: str, logo: str, out: str, escala=0.25, margem=10):
+    img  = Image.open(base).convert("RGBA")
+    log  = Image.open(logo).convert("RGBA")
+    lw, lh = log.size
+    max_w, max_h = int(img.width*escala), int(img.height*escala)
+    s = min(max_w/lw, max_h/lh)
+    log = log.resize((int(lw*s), int(lh*s)))
+    pos = (img.width - log.width - margem, img.height - log.height - margem)
+    img.paste(log, pos, mask=log)
+    img.save(out); return out
+</code></pre>
+          <p class="note">Transforme seus passos em funções reutilizáveis para automação e clareza.</p>
+        </section>
+      </section>
+
+      <!-- BOAS PRÁTICAS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Boas Práticas</h2>
+            <ul class="tight">
+              <li>Trabalhe em <strong>cópias</strong> (não sobrescreva o original).</li>
+              <li>Escolha formatos conforme a necessidade (PNG para transparência, JPEG para fotos).</li>
+              <li>Controle qualidade/otimização em JPEG (<code>quality</code>, <code>optimize</code>).</li>
+              <li>Preserve <strong>alfa</strong> em PNG ao compor marcas d’água.</li>
+              <li>Valide dimensões e proporção antes de redimensionar/recortar.</li>
+            </ul>
+          </div>
+          <div>
+            <h2>Desempenho</h2>
+            <ul class="tight">
+              <li>Evite múltiplas conversões desnecessárias de modo (RGB↔RGBA).</li>
+              <li>Para lotes grandes, <strong>vetorize</strong> decisões e processe em pipelines.</li>
+              <li>Minimize I/O: agrupe leituras e escritas de arquivo.</li>
+              <li>Documente parâmetros e versões dos artefatos gerados.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- EXERCICIOS -->
+      <section>
+        <section>
+          <h2>Exercícios (Lab)</h2>
+          <ol>
+            <li>Abra duas imagens e gere uma composição lado a lado (com borda externa).</li>
+            <li>Adicione um título centralizado com contorno e salve em PNG.</li>
+            <li>Crie uma marca d’água com transparência e teste duas posições.</li>
+            <li>Gere <em>thumbnails</em> proporcionais para uma pasta de fotos.</li>
+            <li>Aplique um filtro de desfoque e ajuste brilho/contraste, comparando resultados.</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- CONCLUSAO -->
+      <section>
+        <h2>Conclusões</h2>
+        <ul>
+          <li>Pillow fornece um conjunto completo para abrir, editar e compor imagens.</li>
+          <li>Domine operações básicas (resize/crop/rotate), desenho (texto/formas) e composição com alfa.</li>
+          <li>Construa funções reutilizáveis e siga boas práticas para resultados consistentes.</li>
+        </ul>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <!-- Reveal.js highlight plugin (bundles highlight.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      plugins: [ RevealHighlight ]
+    });
+  </script>
+</body>
+</html>
