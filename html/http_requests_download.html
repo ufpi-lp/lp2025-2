@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTTP, Requests e Download de Arquivos em Python</title>
+
+  <!-- Reveal.js core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <!-- Light Theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+
+  <!-- Highlight.js (syntax highlighting for code) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      --r-heading-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .reveal pre code { font-size: 1.05em; line-height: 1.25; tab-size: 4; }
+    .reveal section h1, .reveal section h2, .reveal section h3 { letter-spacing: 0.2px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .85em; opacity: .9; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: rgba(0,0,0,.06); font-size: .8em; }
+    table { width: 100%; font-size: .9em; border-collapse: collapse; }
+    th, td { border: 1px solid #bbb; padding: 6px 10px; }
+    th { background: #f6f8fa; }
+    .small code { font-size: .9em; }
+    .center { text-align: center; }
+    .ok { color: #1a7f37; }
+    .warn { color: #b35900; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- CAPA -->
+      <section>
+        <h1>HTTP, Requests e Download de Arquivos em Python</h1>
+        <p>Laboratório de Programação — Ciência da Computação</p>
+        <p class="note">Protocolo HTTP, biblioteca <strong>requests</strong>, análise de respostas e <strong>download com barra de progresso</strong> — com <span class="badge">syntax highlighting</span></p>
+      </section>
+
+      <!-- HTTP INTRO -->
+      <section>
+        <section>
+          <h2>Introdução ao HTTP</h2>
+          <ul>
+            <li><strong>HTTP</strong> é o protocolo base da Web: clientes (navegadores) &harr; servidores.</li>
+            <li>Troca de mensagens <strong>requisição</strong> &rarr; <strong>resposta</strong>, com <em>métodos</em>, <em>códigos de status</em>, <em>cabeçalhos</em> e <em>corpo</em>.</li>
+            <li>Versões: 0.9 → 1.0 → <strong>1.1</strong> (persistência) → <strong>HTTP/2</strong> (desempenho) → HTTP/3 (QUIC).</li>
+          </ul>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Métodos comuns</h3>
+            <ul>
+              <li><code>GET</code> — obter recurso</li>
+              <li><code>POST</code> — enviar dados</li>
+              <li><code>PUT</code> — atualizar recurso</li>
+              <li><code>DELETE</code> — remover recurso</li>
+              <li><code>HEAD</code>, <code>PATCH</code>, <code>OPTIONS</code>…</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Códigos de Status</h3>
+            <ul>
+              <li><strong>2xx</strong> Sucesso (200 OK)</li>
+              <li><strong>3xx</strong> Redirecionamento (301/302)</li>
+              <li><strong>4xx</strong> Erro do cliente (404 Not Found, 401/403)</li>
+              <li><strong>5xx</strong> Erro do servidor (500/502/503)</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Cabeçalhos</h3>
+            <ul>
+              <li><strong>Content-Type</strong>, <strong>Content-Length</strong>, <strong>Authorization</strong>, <strong>Accept</strong>, <strong>User-Agent</strong>.</li>
+              <li>Controlam formato, autenticação, cache e idioma.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Cookies, Sessões e Cache</h3>
+            <ul>
+              <li><strong>Cookies</strong> &amp; <strong>Sessões</strong> preservam estado entre requisições.</li>
+              <li><strong>Cache</strong> melhora desempenho (<code>ETag</code>, <code>Last-Modified</code>).</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- REQUESTS INTRO -->
+      <section>
+        <section>
+          <h2>Biblioteca <code>requests</code> (Python)</h2>
+          <p>Interface simples e “pythônica” para HTTP.</p>
+<pre><code class="language-bash">pip install requests tqdm</code></pre>
+<pre><code class="language-python">import requests
+
+r = requests.get("https://httpbin.org/get", timeout=10)
+print(r.status_code)   # 200
+print(r.headers["Content-Type"])
+print(r.text[:120])    # corpo como string
+</code></pre>
+          <p class="note">Use <code>timeout</code> sempre que possível.</p>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>GET com parâmetros e cabeçalhos</h3>
+<pre><code class="language-python">url = "https://httpbin.org/get"
+params = {"q": "python", "page": 1}
+headers = {"User-Agent": "LabCC/1.0"}
+
+r = requests.get(url, params=params, headers=headers, timeout=10)
+print(r.url)           # URL final com querystring
+data = r.json()        # se JSON válido
+</code></pre>
+          </div>
+          <div>
+            <h3>POST (JSON / form-data)</h3>
+<pre><code class="language-python"># JSON
+r = requests.post("https://httpbin.org/post",
+                  json={"usuario": "ana", "ativo": True}, timeout=10)
+
+# Form
+r2 = requests.post("https://httpbin.org/post",
+                   data={"login": "user", "senha": "123"}, timeout=10)
+</code></pre>
+          </div>
+        </section>
+
+        <section class="two-col">
+          <div>
+            <h3>Sessões (cookies persistentes)</h3>
+<pre><code class="language-python">s = requests.Session()
+s.headers.update({"User-Agent": "LabCC/1.0"})
+resp = s.get("https://httpbin.org/cookies/set?session=abc", timeout=10)
+print(s.cookies.get_dict())
+</code></pre>
+          </div>
+          <div>
+            <h3>Tratando exceções</h3>
+<pre><code class="language-python">try:
+    r = requests.get("https://exemplo.invalido", timeout=5)
+    r.raise_for_status()  # lança HTTPError se 4xx/5xx
+except requests.exceptions.Timeout:
+    print("Timeout!")
+except requests.exceptions.RequestException as e:
+    print(f"Erro: {e}")
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- ANALISAR RESPOSTAS -->
+      <section>
+        <section>
+          <h2>Analisando Respostas (requests)</h2>
+          <ul>
+            <li><strong>Status Code</strong>: sucesso/erro (<code>response.status_code</code>).</li>
+            <li><strong>Cabeçalhos</strong>: metadados (<code>response.headers</code>).</li>
+            <li><strong>Conteúdo</strong>: <code>.json()</code>, <code>.text</code>, <code>.content</code>.</li>
+            <li><strong>Encoding</strong>: <code>response.encoding</code> (ajuste se necessário).</li>
+            <li><strong>Cookies</strong>: <code>response.cookies</code>.</li>
+          </ul>
+<pre><code class="language-python">r = requests.get("https://httpbin.org/anything", timeout=10)
+if r.status_code == 200:
+    print(r.headers.get("Content-Type"))
+    payload = r.json() if "application/json" in r.headers.get("Content-Type","") else r.text
+else:
+    print(f"Falha: {r.status_code}")
+</code></pre>
+        </section>
+      </section>
+
+      <!-- DOWNLOAD: CONCEITOS -->
+      <section>
+        <section>
+          <h2>Download de Arquivos (HTTP)</h2>
+          <ul>
+            <li>Use <strong>streaming</strong> para não carregar o arquivo inteiro na memória: <code>stream=True</code>.</li>
+            <li>Leia em <strong>chunks</strong> (ex.: 1024 bytes) e grave em modo binário <code>'wb'</code>.</li>
+            <li>Exiba <strong>barra de progresso</strong> com <code>tqdm</code> usando <code>Content-Length</code>.</li>
+            <li>Valide <strong>status</strong> (<code>raise_for_status()</code>) e verifique <strong>headers</strong>.</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- DOWNLOAD: UTILS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Extraindo nome/extensão da URL</h2>
+<pre><code class="language-python">import os
+from urllib.parse import urlparse
+
+PROTOCOLOS_SUPORTADOS = {"http", "https"}
+
+class Util:
+    def extrair_nome_extensao_url(self, url: str):
+        parsed = urlparse(url)
+        if parsed.scheme not in PROTOCOLOS_SUPORTADOS:
+            raise ValueError(f"Protocolo não suportado: {parsed.scheme}")
+        caminho = os.path.basename(parsed.path)
+        if not caminho or "." not in caminho:
+            raise ValueError("Arquivo não identificado na URL")
+        nome, ext = caminho.split(".", 1)
+        return nome, ext
+</code></pre>
+          </div>
+          <div>
+            <h2>tqdm: barra de progresso</h2>
+<pre><code class="language-python">from tqdm import tqdm
+import time
+
+def faz_alguma_coisa():
+    time.sleep(0.1)
+
+total_seconds = 10
+with tqdm(total=total_seconds, desc="Simulando", unit="s") as pbar:
+    for _ in range(total_seconds):
+        faz_alguma_coisa()
+        pbar.update(1)
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- DOWNLOAD: EXEMPLO DIRETO -->
+      <section>
+        <section>
+          <h2>Download simples (stream + barra)</h2>
+<pre><code class="language-python">import requests
+from tqdm import tqdm
+
+url = "https://httpbin.org/image/png"
+nome_arquivo = "imagem.png"
+
+with requests.get(url, stream=True, timeout=30) as r:
+    r.raise_for_status()
+    total = int(r.headers.get("content-length", 0))
+    with open(nome_arquivo, "wb") as f, tqdm(
+        total=total, unit="B", unit_scale=True, desc=nome_arquivo
+    ) as pbar:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk:
+                f.write(chunk)
+                pbar.update(len(chunk))
+print("Download concluído!")
+</code></pre>
+        </section>
+      </section>
+
+      <!-- DOWNLOAD: CLASSE -->
+      <section>
+        <section>
+          <h2>Classe de Download com Callback</h2>
+<pre><code class="language-python">import requests
+from tqdm import tqdm
+
+class Download:
+    def __init__(self, url: str, path_arquivo: str):
+        self.url = url
+        self.path_arquivo = path_arquivo
+        self.callback = None  # def callback(total, progresso): ...
+
+    def set_callback(self, cb):
+        self.callback = cb
+
+    def executa(self) -> int:
+        try:
+            with requests.get(self.url, stream=True, timeout=60) as r:
+                r.raise_for_status()
+                total = int(r.headers.get("content-length", 0))
+                with open(self.path_arquivo, "wb") as f, tqdm(
+                    total=total, unit="B", unit_scale=True, desc=self.path_arquivo
+                ) as pbar:
+                    for chunk in r.iter_content(chunk_size=1024):
+                        if chunk:
+                            f.write(chunk)
+                            pbar.update(len(chunk))
+                            if self.callback:
+                                self.callback(total, pbar.n)
+            print(f"OK: {self.path_arquivo} ({total} bytes)")
+            return total
+        except requests.exceptions.MissingSchema:
+            raise Exception("URL inválida. Verifique o esquema (http/https).")
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Erro na conexão: {e}")
+</code></pre>
+        </section>
+
+        <section>
+          <h3>Uso da classe</h3>
+<pre><code class="language-python">def on_progress(total, atual):
+    if total:
+        pct = (atual / total) * 100
+        # aqui você pode notificar UI/log etc.
+        # print(f"{pct:.1f}%")
+
+url1 = "https://httpbin.org/image/png"
+down = Download(url1, "meu_arquivo.png")
+down.set_callback(on_progress)
+down.executa()
+</code></pre>
+        </section>
+      </section>
+
+      <!-- ANALISE RESPOSTA: CHECKLIST -->
+      <section>
+        <section>
+          <h2>Checklist de Análise da Resposta</h2>
+          <ul>
+            <li><span class="ok">Status code</span> &rarr; <code>200</code> é sucesso típico; trate 4xx/5xx.</li>
+            <li><span class="ok">Cabeçalhos</span> &rarr; <code>Content-Type</code>, <code>Content-Length</code>, <code>ETag</code>.</li>
+            <li><span class="ok">Conteúdo</span> &rarr; <code>.json()</code> / <code>.text</code> / <code>.content</code>.</li>
+            <li><span class="ok">Encoding</span> &rarr; ajuste <code>response.encoding</code> quando necessário.</li>
+            <li><span class="ok">Exceções</span> &rarr; <code>try/except RequestException</code> + <code>timeout</code>.</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- BOAS PRATICAS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Boas Práticas (HTTP/Requests)</h2>
+            <ul>
+              <li>Defina <strong>timeout</strong> e trate <strong>exceções</strong>.</li>
+              <li>Envie <strong>User-Agent</strong> informativo; respeite <em>rate limits</em>.</li>
+              <li>Use <strong>HTTPS</strong> sempre que possível.</li>
+              <li>Para APIs: autenticação (Bearer/API-Key) via <code>headers</code>.</li>
+            </ul>
+          </div>
+          <div>
+            <h2>Downloads Seguros</h2>
+            <ul>
+              <li>Valide URL, tamanho e tipo de conteúdo.</li>
+              <li>Salve em caminhos confiáveis; evite sobrepor sem querer.</li>
+              <li>Opcional: verifique <strong>hash</strong> do arquivo (integridade).</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- EXERCICIOS -->
+      <section>
+        <section>
+          <h2>Exercícios (Lab)</h2>
+          <ol>
+            <li>Faça um <code>GET</code> com parâmetros e imprima <code>status</code>, <code>headers</code> e os 200 primeiros caracteres do corpo.</li>
+            <li>Implemente um <code>POST</code> com <code>json</code> e trate exceções (<code>timeout</code>, <code>HTTPError</code>).</li>
+            <li>Baixe uma imagem (PNG/JPEG) exibindo a barra de progresso (<code>tqdm</code>).</li>
+            <li>Transforme o download em função reutilizável e depois em classe com <code>callback</code>.</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- CONCLUSAO -->
+      <section>
+        <h2>Conclusões</h2>
+        <ul>
+          <li><strong>HTTP</strong> define como clientes e servidores se comunicam na Web.</li>
+          <li><strong>requests</strong> simplifica requisições e análise de respostas em Python.</li>
+          <li>Com <strong>streaming</strong> + <strong>tqdm</strong>, implementamos downloads eficientes e informativos.</li>
+        </ul>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <!-- Reveal.js highlight plugin (bundles highlight.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      plugins: [ RevealHighlight ]
+    });
+  </script>
+</body>
+</html>
