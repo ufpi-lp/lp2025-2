@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Introdução a GUI com Tkinter (Python)</title>
+
+  <!-- Reveal.js core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <!-- Light Theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+
+  <!-- Highlight.js (syntax highlighting for code) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      --r-heading-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .reveal pre code { font-size: 1.05em; line-height: 1.3; tab-size: 4; }
+    .reveal section h1, .reveal section h2, .reveal section h3 { letter-spacing: 0.2px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .85em; opacity: .9; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: rgba(0,0,0,.06); font-size: .8em; }
+    .ok { color: #1a7f37; }
+    .warn { color: #b35900; }
+    img { max-width: 100%; height: auto; border-radius: 8px; }
+    audio { width: 100%; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- CAPA -->
+      <section>
+        <h1>Interfaces Gráficas com Tkinter</h1>
+        <p>Laboratório de Programação — Ciência da Computação</p>
+        <p class="note">Tkinter, widgets, layouts, eventos e boas práticas — com <span class="badge">syntax highlighting</span></p>
+      </section>
+
+      <!-- O QUE É TKINTER -->
+      <section>
+        <section>
+          <h2>O que é Tkinter?</h2>
+          <ul>
+            <li>Toolkit GUI nativo do Python, baseado em <strong>Tcl/Tk</strong>.</li>
+            <li>Multiplataforma (Linux, macOS, Windows) e geralmente já instalado.</li>
+            <li>Ideal para criar apps com botões, entradas, diálogos, menus, etc.</li>
+          </ul>
+          <p class="note">Teste rápido no terminal: <code>python -m tkinter</code> (abre uma janela demo).</p>
+        </section>
+        <section class="two-col">
+          <div>
+            <h3>Primeira janela</h3>
+<pre><code class="language-python">import tkinter as tk
+
+root = tk.Tk()
+root.title("Minha Aplicação")
+root.geometry("500x300")  # LxA
+root.mainloop()
+</code></pre>
+          </div>
+          <div>
+            <h3>Conceitos</h3>
+            <ul>
+              <li><strong>root</strong>: janela principal (loop de eventos).</li>
+              <li><strong>widget</strong>: elemento da UI (Label, Button, Entry…).</li>
+              <li><strong>layout</strong>: pack, grid, place.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- WIDGETS ESSENCIAIS -->
+      <section>
+        <section>
+          <h2>Widgets Essenciais</h2>
+          <div class="three-col">
+            <ul>
+              <li><strong>Label</strong>: texto estático</li>
+              <li><strong>Button</strong>: aciona comandos</li>
+              <li><strong>Entry</strong>: entrada de 1 linha</li>
+            </ul>
+            <ul>
+              <li><strong>Checkbutton</strong>, <strong>Radiobutton</strong></li>
+              <li><strong>Text</strong> / ScrolledText</li>
+              <li><strong>Listbox</strong>, <strong>Combobox</strong></li>
+            </ul>
+            <ul>
+              <li><strong>Frame</strong>: container/agrupador</li>
+              <li><strong>Menu</strong>, <strong>Menubar</strong></li>
+              <li><strong>ttk</strong>: versões temáticas</li>
+            </ul>
+          </div>
+        </section>
+        <section class="two-col">
+          <div>
+            <h3>Label, Entry e Button</h3>
+<pre><code class="language-python">import tkinter as tk
+
+def exibir_texto():
+    texto = entrada.get()
+    rotulo_resultado.config(text=f"Você digitou: {texto}")
+
+root = tk.Tk()
+tk.Label(root, text="Digite algo:").pack()
+entrada = tk.Entry(root)
+entrada.pack()
+tk.Button(root, text="Exibir", command=exibir_texto).pack()
+rotulo_resultado = tk.Label(root, text="")
+rotulo_resultado.pack()
+root.mainloop()
+</code></pre>
+          </div>
+          <div>
+            <h3>Messagebox & Filedialog</h3>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import messagebox, filedialog
+
+root = tk.Tk()
+
+def abrir_arquivo():
+    caminho = filedialog.askopenfilename(
+        title="Abrir arquivo",
+        filetypes=[("Texto", "*.txt"), ("Todos", "*.*")]
+    )
+    if caminho:
+        messagebox.showinfo("Selecionado", caminho)
+
+tk.Button(root, text="Abrir arquivo", command=abrir_arquivo).pack(pady=8)
+root.mainloop()
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- LAYOUT MANAGERS -->
+      <section>
+        <section>
+          <h2>Gerenciadores de Layout</h2>
+          <ul>
+            <li><strong>pack</strong>: empilha widgets (top/bottom/left/right, fill, expand).</li>
+            <li><strong>grid</strong>: posiciona em linhas/colunas (row/column/rowspan/columnspan).</li>
+            <li><strong>place</strong>: coordenadas absolutas/relativas (x, y, relx, rely, relwidth…).</li>
+          </ul>
+        </section>
+        <section class="two-col">
+          <div>
+            <h3>Exemplo com <code>grid</code></h3>
+<pre><code class="language-python">import tkinter as tk
+
+root = tk.Tk()
+root.title("Grid")
+
+tk.Label(root, text="Usuário").grid(row=0, column=0, sticky="e")
+tk.Entry(root).grid(row=0, column=1, padx=6, pady=4)
+
+tk.Label(root, text="Senha").grid(row=1, column=0, sticky="e")
+tk.Entry(root, show="*").grid(row=1, column=1, padx=6, pady=4)
+
+tk.Button(root, text="Entrar").grid(row=2, column=0, columnspan=2, pady=8)
+root.mainloop()
+</code></pre>
+          </div>
+          <div>
+            <h3>Exemplo com <code>place</code></h3>
+<pre><code class="language-python">import tkinter as tk
+
+root = tk.Tk()
+root.geometry("300x200")
+
+tk.Label(root, text="Widget 1", bg="#ff9999").place(x=20, y=20)
+tk.Label(root, text="Widget 2", bg="#99ff99").place(x=100, y=80)
+tk.Label(root, text="Widget 3", bg="#9999ff").place(x=200, y=140)
+
+root.mainloop()
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- EVENTOS E INTERATIVIDADE -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Eventos & Callbacks</h2>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import messagebox
+
+def ao_clicar():
+    messagebox.showinfo("Mensagem", "Você clicou!")
+
+root = tk.Tk()
+btn = tk.Button(root, text="Clique aqui", command=ao_clicar)
+btn.pack(padx=10, pady=10)
+
+# Atalho de teclado: Enter chama o botão
+root.bind("&lt;Return&gt;", lambda e: ao_clicar())
+root.mainloop()
+</code></pre>
+          </div>
+          <div>
+            <h2>Atualizando a UI</h2>
+            <ul>
+              <li>Não bloqueie o loop principal com tarefas longas.</li>
+              <li>Use <code>after(ms, func)</code> para agendar atualizações.</li>
+              <li>Para I/O pesado, considere <em>threading</em> + <code>queue</code> + <code>after</code>.</li>
+            </ul>
+<pre><code class="language-python">import tkinter as tk
+
+root = tk.Tk()
+contador = tk.IntVar(value=0)
+
+def tick():
+    contador.set(contador.get() + 1)
+    root.after(1000, tick)  # chama novamente em 1s
+
+tk.Label(root, textvariable=contador).pack(pady=10)
+root.after(1000, tick)
+root.mainloop()
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- SCROLLED TEXT, FRAMES, MENUS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>ScrolledText & Frames</h2>
+<pre><code class="language-python">import tkinter as tk
+from tkinter.scrolledtext import ScrolledText
+
+root = tk.Tk()
+
+frame = tk.Frame(root, padx=8, pady=8)
+frame.pack(fill="both", expand=True)
+
+tk.Label(frame, text="Log:").pack(anchor="w")
+log = ScrolledText(frame, height=8, width=40)
+log.pack(fill="both", expand=True)
+
+log.insert("end", "Linha 1\nLinha 2\n")
+root.mainloop()
+</code></pre>
+          </div>
+          <div>
+            <h2>Menu de Aplicação</h2>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import messagebox
+
+root = tk.Tk()
+menubar = tk.Menu(root)
+
+def sobre():
+    messagebox.showinfo("Sobre", "Demo Tkinter")
+
+menu_arq = tk.Menu(menubar, tearoff=0)
+menu_arq.add_command(label="Sair", command=root.quit)
+menubar.add_cascade(label="Arquivo", menu=menu_arq)
+
+menu_ajuda = tk.Menu(menubar, tearoff=0)
+menu_ajuda.add_command(label="Sobre", command=sobre)
+menubar.add_cascade(label="Ajuda", menu=menu_ajuda)
+
+root.config(menu=menubar)
+root.mainloop()
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- TTK -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>ttk — Widgets Tematizados</h2>
+            <ul>
+              <li>Conjunto de widgets com aparência nativa do SO.</li>
+              <li>Ex.: <code>ttk.Button</code>, <code>ttk.Entry</code>, <code>ttk.Combobox</code>, <code>ttk.Treeview</code>.</li>
+              <li>Suporte a temas via <code>ttk.Style()</code>.</li>
+            </ul>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk
+
+root = tk.Tk()
+style = ttk.Style(root)
+print(style.theme_names())  # temas disponíveis
+style.theme_use("clam")     # ou "default", "alt", etc.
+
+ttk.Label(root, text="Nome:").grid(row=0, column=0, padx=6, pady=6)
+ttk.Entry(root).grid(row=0, column=1, padx=6, pady=6)
+ttk.Button(root, text="OK").grid(row=1, column=0, columnspan=2, pady=8)
+root.mainloop()
+</code></pre>
+          </div>
+          <div>
+            <h2>Treeview (tabela básica)</h2>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk
+
+root = tk.Tk()
+cols = ("ID", "Nome", "Nota")
+tv = ttk.Treeview(root, columns=cols, show="headings", height=5)
+for c in cols:
+    tv.heading(c, text=c)
+    tv.column(c, width=100)
+tv.pack(fill="both", expand=True)
+
+# inserir linhas
+tv.insert("", "end", values=(1, "Ana", 9.1))
+tv.insert("", "end", values=(2, "João", 7.5))
+root.mainloop()
+</code></pre>
+          </div>
+        </section>
+      </section>
+
+      <!-- ESTRUTURAÇÃO COM CLASSES -->
+      <section>
+        <section>
+          <h2>Estruturando o App com Classes</h2>
+          <p class="note">Separa lógica e interface; facilita manutenção e testes.</p>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk, messagebox
+
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Agenda Simples")
+        self.geometry("360x240")
+        self._build_ui()
+
+    def _build_ui(self):
+        ttk.Label(self, text="Nome:").grid(row=0, column=0, padx=6, pady=6, sticky="e")
+        self.nome = ttk.Entry(self)
+        self.nome.grid(row=0, column=1, padx=6, pady=6)
+
+        ttk.Label(self, text="Telefone:").grid(row=1, column=0, padx=6, pady=6, sticky="e")
+        self.tel = ttk.Entry(self)
+        self.tel.grid(row=1, column=1, padx=6, pady=6)
+
+        ttk.Button(self, text="Salvar", command=self.salvar).grid(row=2, column=0, columnspan=2, pady=8)
+
+    def salvar(self):
+        messagebox.showinfo("OK", f"{self.nome.get()} — {self.tel.get()}")
+
+if __name__ == "__main__":
+    App().mainloop()
+</code></pre>
+        </section>
+      </section>
+
+      <!-- MIND MAP & PODCAST -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Mind Map (Tkinter)</h2>
+            <img src="https://raw.githubusercontent.com/armandossrecife/mytkinter/refs/heads/main/Mind_Map_Tkinter.png" alt="Mind map Tkinter" />
+          </div>
+          <div>
+            <h2>Podcast</h2>
+            <p>A Essência do Tkinter — Interfaces Gráficas em Python</p>
+            <audio controls>
+              <source src="https://github.com/ufpi-lp/lp2025-1/raw/refs/heads/main/A_Essencia_do_Tkinter_%20Interfaces_Graficas_em_Python.wav" type="audio/wav">
+              Seu navegador não suporta áudio embutido.
+            </audio>
+          </div>
+        </section>
+      </section>
+
+      <!-- BOAS PRÁTICAS -->
+      <section>
+        <section class="two-col">
+          <div>
+            <h2>Boas Práticas</h2>
+            <ul>
+              <li>Evite lógica pesada no thread principal; use <code>after</code> ou threads.</li>
+              <li>Organize widgets em <strong>Frames</strong> e separe camadas (UI vs lógica).</li>
+              <li>Use <strong>ttk</strong> para aparência consistente e temas.</li>
+              <li>Valide entradas do usuário; trate exceções (ex.: dialogs).</li>
+            </ul>
+          </div>
+          <div>
+            <h2>Checklist Rápido</h2>
+            <ul>
+              <li><span class="ok">Título/Geometria</span> definidos.</li>
+              <li><span class="ok">Layout</span> com grid/pack consistente.</li>
+              <li><span class="ok">Eventos</span> conectados a callbacks.</li>
+              <li><span class="ok">Feedback</span> via messagebox/status.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <!-- EXERCICIOS -->
+      <section>
+        <section>
+          <h2>Exercícios (Lab)</h2>
+          <ol>
+            <li>Crie um formulário (Nome, Email, Curso) com <code>ttk</code> e valide campos.</li>
+            <li>Implemente um menu “Arquivo &rarr; Abrir” para carregar um texto e exibir em <code>ScrolledText</code>.</li>
+            <li>Crie uma calculadora simples (grid), teclas & teclado (bind).</li>
+            <li>Adicione uma barra de status atualizada via <code>after</code>.</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- CONCLUSAO -->
+      <section>
+        <h2>Conclusões</h2>
+        <ul>
+          <li><strong>Tkinter</strong> é prático, nativo e suficiente para muitas GUIs desktop.</li>
+          <li>Domine widgets essenciais, <strong>layouts</strong> e <strong>eventos</strong>.</li>
+          <li>Estruture seu app com classes e use <strong>ttk</strong> para uma UI mais moderna.</li>
+        </ul>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js core JS -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <!-- Reveal.js highlight plugin (bundles highlight.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      plugins: [ RevealHighlight ]
+    });
+  </script>
+</body>
+</html>
