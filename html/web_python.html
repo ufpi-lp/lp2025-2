@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Introdução ao Desenvolvimento Web & Flask</title>
+
+  <!-- Reveal.js (tema claro) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css" id="theme">
+  <!-- Highlight.js (syntax highlighting) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+
+  <style>
+    :root{
+      --r-main-font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
+      --r-heading-font: var(--r-main-font);
+    }
+    .reveal pre code { font-size: 1.02em; line-height: 1.35; tab-size: 4; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; align-items: start; }
+    .note { font-size: .9em; opacity: .85; }
+    .badge { display:inline-block; padding:2px 8px; border-radius:10px; background:rgba(0,0,0,.06); font-size:.8em; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { border:1px solid #ddd; padding:8px 10px; }
+    th { background:#f6f8fa; }
+    ul.tight > li { margin: .25em 0; }
+    img { max-width: 100%; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- CAPA -->
+<section>
+  <h1>Introdução ao Desenvolvimento Web</h1>
+  <h3>+ Framework Flask (Python)</h3>
+  <p class="note">Fundamentos da Web • Cliente-Servidor • HTML/CSS/JS • Roadmap • Flask hands-on</p>
+</section>
+
+<!-- FUNDAMENTOS DA WEB -->
+<section>
+  <section>
+    <h2>Fundamentos da Web</h2>
+    <ul>
+      <li><strong>HTTP</strong>: protocolo de comunicação cliente ⟷ servidor</li>
+      <li><strong>HTML</strong>: estrutura e conteúdo</li>
+      <li><strong>CSS</strong>: estilo e layout</li>
+      <li><strong>JavaScript</strong>: interatividade e DOM</li>
+    </ul>
+  </section>
+  <section class="two-col">
+    <div>
+      <h3>HTTP (visão geral)</h3>
+      <ul class="tight">
+        <li>Métodos: GET, POST, PUT, DELETE…</li>
+        <li>Status: 200, 201, 400, 401, 404, 500…</li>
+        <li>Cabeçalhos (headers) e corpo (body)</li>
+        <li>Cookies, sessões e cache</li>
+      </ul>
+<pre><code class="language-text">GET /pagina HTTP/1.1
+Host: exemplo.com
+Accept: text/html
+
+HTTP/1.1 200 OK
+Content-Type: text/html
+
+&lt;html&gt;...&lt;/html&gt;
+</code></pre>
+    </div>
+    <div>
+      <h3>Cliente-Servidor</h3>
+      <ul class="tight">
+        <li><strong>Cliente</strong>: navegador / app envia requisições</li>
+        <li><strong>Servidor</strong>: processa e responde</li>
+        <li>Ciclo de requisição e resposta (stateless em HTTP)</li>
+      </ul>
+      <p class="note"><span class="badge">Dica</span> Entender requisições ajuda a debugar APIs e front-ends.</p>
+    </div>
+  </section>
+</section>
+
+<!-- HTML / CSS / JS BÁSICO -->
+<section>
+  <section class="three-col">
+    <div>
+      <h2>HTML</h2>
+<pre><code class="language-html">&lt;!doctype html&gt;
+&lt;html&gt;
+  &lt;head&gt;&lt;title&gt;Minha Página&lt;/title&gt;&lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Título&lt;/h1&gt;
+    &lt;p&gt;Parágrafo com &lt;a href="#"&gt;link&lt;/a&gt;.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+    </div>
+    <div>
+      <h2>CSS</h2>
+<pre><code class="language-css">body { font-family: Arial, sans-serif; }
+h1 { color: #1f6feb; }
+.card {
+  border: 1px solid #ddd;
+  padding: 1rem; border-radius: 8px;
+}
+</code></pre>
+    </div>
+    <div>
+      <h2>JavaScript</h2>
+<pre><code class="language-javascript">document.querySelector("#btn").addEventListener("click", () =&gt; {
+  const nome = document.querySelector("#nome").value;
+  alert(`Olá, ${nome}!`);
+});
+</code></pre>
+    </div>
+  </section>
+  <section>
+    <h2>DOM & Eventos</h2>
+<pre><code class="language-html">&lt;input id="nome" placeholder="Seu nome" /&gt;
+&lt;button id="btn"&gt;Saudar&lt;/button&gt;
+&lt;script&gt;
+// manipulação do DOM
+const btn = document.getElementById("btn");
+btn.onclick = () =&gt; {
+  const nome = document.getElementById("nome").value.trim();
+  console.log("Nome digitado:", nome);
+};
+&lt;/script&gt;
+</code></pre>
+  </section>
+</section>
+
+<!-- ROADMAP WEB -->
+<section>
+  <section>
+    <h2>Roadmap Sugerido</h2>
+    <ul>
+      <li><strong>Fundamentos</strong>: HTML, CSS, JS</li>
+      <li><strong>Arquitetura</strong>: Cliente-Servidor, HTTP</li>
+      <li><strong>Frameworks</strong>: React/Angular/Vue no front • Flask/Django/FastAPI no back</li>
+      <li><strong>Banco de dados</strong>: SQL (PostgreSQL/MySQL) e NoSQL (MongoDB, etc.)</li>
+      <li><strong>Segurança</strong>: Autenticação, Autorização, OWASP Top 10</li>
+    </ul>
+  </section>
+  <section class="two-col">
+    <div>
+      <h3>Front-end (exemplos)</h3>
+      <ul class="tight">
+        <li>React — UI declarativa, componentes</li>
+        <li>Angular — framework completo</li>
+        <li>Vue — progressivo e simples</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Back-end (exemplos)</h3>
+      <ul class="tight">
+        <li>Node.js — JS no servidor</li>
+        <li>Python — Flask / Django / FastAPI</li>
+        <li>Java — Spring Boot</li>
+      </ul>
+    </div>
+  </section>
+</section>
+
+<!-- BANCO E SEGURANÇA -->
+<section>
+  <section class="two-col">
+    <div>
+      <h2>Bancos de Dados</h2>
+      <ul>
+        <li><strong>SQL</strong>: PostgreSQL, MySQL — ACID, schemas</li>
+        <li><strong>NoSQL</strong>: MongoDB, Cassandra — flexibilidade, escala</li>
+      </ul>
+<pre><code class="language-sql">-- SQL de exemplo
+CREATE TABLE contatos (
+  id SERIAL PRIMARY KEY,
+  nome TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE
+);
+</code></pre>
+    </div>
+    <div>
+      <h2>Segurança</h2>
+      <ul>
+        <li>Autenticação & Autorização (JWT, sessões)</li>
+        <li>OWASP Top 10 (XSS, SQLi, CSRF, etc.)</li>
+        <li>HTTPS, headers de segurança, validação de entrada</li>
+      </ul>
+      <p class="note">Segurança deve ser considerada desde o início do projeto.</p>
+    </div>
+  </section>
+</section>
+
+<!-- PROJETO FLASK: AGENDA -->
+<section>
+  <section>
+    <h2>Projeto: Agenda de Contatos (Flask)</h2>
+    <p>Vamos criar uma aplicação simples para <strong>cadastrar e listar contatos</strong>.</p>
+    <ul>
+      <li>Flask como servidor web</li>
+      <li>Templates Jinja2</li>
+      <li>HTML/CSS/JS no front</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>1) Ambiente</h3>
+<pre><code class="language-bash"># criar e ativar venv
+python -m venv .venv
+# Linux/macOS
+source .venv/bin/activate
+# Windows
+# .venv\Scripts\activate
+
+pip install Flask
+</code></pre>
+    <p class="note">Mantenha as dependências isoladas por projeto.</p>
+  </section>
+
+  <section>
+    <h3>2) app.py</h3>
+<pre><code class="language-python">from flask import Flask, render_template, request, redirect, url_for
+
+app = Flask(__name__)
+contatos: list[dict] = []  # usar DB em produção
+
+@app.route("/")
+def index():
+    return render_template("index.html", contatos=contatos)
+
+@app.route("/adicionar", methods=["POST"])
+def adicionar_contato():
+    contato = {
+        "nome": request.form["nome"],
+        "email": request.form["email"],
+        "telefone": request.form["telefone"]
+    }
+    contatos.append(contato)
+    return redirect(url_for("index"))
+
+if __name__ == "__main__":
+    app.run(debug=True)
+</code></pre>
+  </section>
+
+  <section class="two-col">
+    <div>
+      <h3>3) templates/index.html</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;Minha Agenda&lt;/title&gt;
+  &lt;link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Minha Agenda&lt;/h1&gt;
+
+  &lt;form method="POST" action="/adicionar" class="card"&gt;
+    &lt;input type="text" name="nome" placeholder="Nome" required /&gt;
+    &lt;input type="email" name="email" placeholder="Email" required /&gt;
+    &lt;input type="tel" name="telefone" placeholder="Telefone" required /&gt;
+    &lt;button type="submit"&gt;Adicionar&lt;/button&gt;
+  &lt;/form&gt;
+
+  &lt;h2&gt;Contatos&lt;/h2&gt;
+  &lt;ul&gt;
+    {% for c in contatos %}
+      &lt;li&gt;{{ c.nome }} — {{ c.email }} — {{ c.telefone }}&lt;/li&gt;
+    {% else %}
+      &lt;li&gt;Sem contatos.&lt;/li&gt;
+    {% endfor %}
+  &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+    </div>
+    <div>
+      <h3>4) static/style.css</h3>
+<pre><code class="language-css">* { box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+       max-width: 820px; margin: 40px auto; padding: 0 16px; }
+h1 { color: #1f6feb; }
+.card { display: grid; gap: 8px; padding: 12px;
+        border: 1px solid #ddd; border-radius: 10px; }
+input, button { padding: 10px; border-radius: 8px; border: 1px solid #ccc; }
+button { background: #1f6feb; color: white; border: none; cursor: pointer; }
+button:hover { filter: brightness(1.05); }
+</code></pre>
+    </div>
+  </section>
+
+  <section>
+    <h3>5) Executando</h3>
+<pre><code class="language-bash">python app.py
+# acesse http://127.0.0.1:5000
+</code></pre>
+    <p class="note">Próximos passos: persistir em <strong>SQLite</strong>, validações de formulário, editar/excluir.</p>
+  </section>
+</section>
+
+<!-- ESTRUTURA DE PASTAS -->
+<section>
+  <section>
+    <h2>Estrutura de Pastas (Flask)</h2>
+<pre><code class="language-bash">meu_projeto/
+├─ app.py
+├─ templates/
+│  └─ index.html
+├─ static/
+│  └─ style.css
+└─ .venv/
+</code></pre>
+    <p class="note">Convencional: <code>templates/</code> para HTML (Jinja2) e <code>static/</code> para CSS/JS/imagens.</p>
+  </section>
+  <section class="two-col">
+    <div>
+      <h3>Jinja2 (dicas)</h3>
+<pre><code class="language-html">&lt;ul&gt;
+  {% for item in itens %}
+    &lt;li&gt;{{ item.nome }}&lt;/li&gt;
+  {% endfor %}
+&lt;/ul&gt;
+</code></pre>
+    </div>
+    <div>
+      <h3>URL dinâmicas</h3>
+<pre><code class="language-python">@app.route("/contato/&lt;int:cid&gt;")
+def detalhe(cid):
+    # buscar contato por id
+    ...
+</code></pre>
+    </div>
+  </section>
+</section>
+
+<!-- FORMULÁRIOS, JSON E APIs -->
+<section>
+  <section class="two-col">
+    <div>
+      <h2>Formulários & Request</h2>
+<pre><code class="language-python">from flask import request
+
+@app.post("/enviar")
+def enviar():
+    nome = request.form.get("nome")
+    return f"Olá, {nome}!"
+</code></pre>
+    </div>
+    <div>
+      <h2>JSON & APIs</h2>
+<pre><code class="language-python">from flask import jsonify
+
+@app.get("/api/contatos")
+def api_contatos():
+    return jsonify(contatos)
+</code></pre>
+    </div>
+  </section>
+</section>
+
+<!-- BOAS PRÁTICAS COM FLASK -->
+<section>
+  <section class="two-col">
+    <div>
+      <h2>Boas Práticas</h2>
+      <ul>
+        <li>Separe camadas (rotas, serviços, repositórios)</li>
+        <li>Valide dados (WTForms, pydantic em APIs)</li>
+        <li>Use Blueprints para modularizar rotas</li>
+        <li>Config por ambiente (dev/stage/prod)</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Blueprints (exemplo)</h2>
+<pre><code class="language-python"># contatos/rotas.py
+from flask import Blueprint
+bp = Blueprint("contatos", __name__)
+
+@bp.get("/contatos")
+def listar():
+    return "listar..."
+
+# app.py
+from contatos.rotas import bp
+app.register_blueprint(bp)
+</code></pre>
+    </div>
+  </section>
+</section>
+
+<!-- DEPLOY & PRÓXIMOS PASSOS -->
+<section>
+  <section class="two-col">
+    <div>
+      <h2>Deploy (visão geral)</h2>
+      <ul>
+        <li>WSGI server (gunicorn/uwsgi) + reverse proxy (nginx)</li>
+        <li>Variáveis de ambiente (SECRET_KEY, DB_URL)</li>
+        <li>Logs, monitoramento e backups</li>
+      </ul>
+<pre><code class="language-bash"># exemplo simples
+pip install gunicorn
+gunicorn -w 4 -b 0.0.0.0:8000 app:app
+</code></pre>
+    </div>
+    <div>
+      <h2>Próximos Passos</h2>
+      <ul>
+        <li>Persistência (SQLAlchemy/SQLite/PostgreSQL)</li>
+        <li>Autenticação (Flask-Login / JWT em APIs)</li>
+        <li>Arquitetura REST / Blueprints / Tests (pytest)</li>
+        <li>Front-end reativo (React/Alpine/HTMX)</li>
+      </ul>
+    </div>
+  </section>
+</section>
+
+<!-- RECAP -->
+<section>
+  <h2>Recapitulando</h2>
+  <ul>
+    <li>HTTP, HTML, CSS, JS: base do desenvolvimento web</li>
+    <li>Cliente-Servidor: ciclo de requisição/resposta</li>
+    <li>Flask: rotas, templates, static, JSON</li>
+    <li>Projeto exemplo: Agenda de Contatos</li>
+  </ul>
+  <p class="note">Daqui, evolua para banco de dados, segurança e testes.</p>
+</section>
+
+</div>
+</div>
+
+<!-- Reveal.js -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<!-- Highlight plugin (bundles highlight.js) -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    plugins: [ RevealHighlight ]
+  });
+</script>
+</body>
+</html>
