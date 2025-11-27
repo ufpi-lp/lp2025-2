@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Apresentação: Introdução a GUI</title>
+
+<style>
+    body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f7f7f7;
+        margin: 0;
+        padding: 0;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .slide {
+        max-width: 900px;
+        margin: 60px auto;
+        background: white;
+        padding: 40px 60px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    h2 {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    p, li {
+        font-size: 18px;
+    }
+
+    ul {
+        margin-top: 10px;
+        padding-left: 25px;
+    }
+
+    pre {
+        background: #f2f2f2;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 16px;
+        overflow-x: auto;
+        border: 1px solid #ddd;
+    }
+
+    .footer {
+        text-align: center;
+        color: #777;
+        padding: 40px;
+        font-size: 14px;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- SLIDE 1 -->
+<section class="slide">
+    <h1>Introdução a GUI (Graphical User Interface)</h1>
+    <p>Uma visão clara e objetiva para estudantes do primeiro ano de Ciência da Computação.</p>
+</section>
+
+<!-- SLIDE 2 -->
+<section class="slide">
+    <h2>O que é uma GUI?</h2>
+    <ul>
+        <li>GUI significa <strong>Interface Gráfica do Usuário</strong>.</li>
+        <li>É a camada visual de interação entre humano e computador.</li>
+        <li>Baseada em janelas, botões, menus e ícones.</li>
+        <li>Alternativa moderna às interfaces de linha de comando (CLI).</li>
+    </ul>
+</section>
+
+<!-- =========================================================== -->
+<!-- NOVA SEÇÃO: EVOLUÇÃO HISTÓRICA -->
+<!-- =========================================================== -->
+
+<!-- SLIDE 3 -->
+<section class="slide">
+    <h2>Evolução Histórica das GUIs</h2>
+    <p>A GUI não surgiu de uma vez. Ela evoluiu ao longo de décadas de pesquisa em interação humano-computador.</p>
+</section>
+
+<!-- SLIDE 4 -->
+<section class="slide">
+    <h2>Anos 1960 — Primeiros Conceitos</h2>
+    <ul>
+        <li><strong>Douglas Engelbart</strong> apresenta o “Mother of All Demos” (1968).</li>
+        <li>Primeira demonstração do <strong>mouse</strong>, janelas sobrepostas e hipertexto.</li>
+        <li>Interfaces ainda experimentais e restritas a laboratórios.</li>
+    </ul>
+</section>
+
+<!-- SLIDE 5 -->
+<section class="slide">
+    <h2>Anos 1970 — Xerox PARC</h2>
+    <ul>
+        <li>Surgimento da primeira GUI moderna no <strong>Xerox Alto</strong> (1973).</li>
+        <li>Introdução de:
+            <ul>
+                <li>Ícones</li>
+                <li>Janelas</li>
+                <li>Desktop metáfora (ambiente de trabalho)</li>
+                <li>Menu e ponteiro do mouse</li>
+            </ul>
+        </li>
+        <li>Base conceitual dos sistemas atuais.</li>
+    </ul>
+</section>
+
+<!-- SLIDE 6 -->
+<section class="slide">
+    <h2>Anos 1980 — GUIs comerciais</h2>
+    <ul>
+        <li><strong>Apple Lisa</strong> (1983) — primeira GUI comercial.</li>
+        <li><strong>Apple Macintosh</strong> (1984) populariza interfaces gráficas.</li>
+        <li><strong>Microsoft Windows</strong> (1985) leva as GUIs ao mainstream.</li>
+    </ul>
+</section>
+
+<!-- SLIDE 7 -->
+<section class="slide">
+    <h2>Anos 1990–2000 — GUI moderna</h2>
+    <ul>
+        <li>Windows 95 — menus iniciar, barra de tarefas.</li>
+        <li>Ambientes Linux (GNOME, KDE).</li>
+        <li>Aparência 3D, sombras, transparência.</li>
+        <li>Interfaces baseadas em Web e navegador.</li>
+    </ul>
+</section>
+
+<!-- SLIDE 8 -->
+<section class="slide">
+    <h2>2010–2025 — GUIs contemporâneas</h2>
+    <ul>
+        <li><strong>Interfaces Touch</strong> (iPhone, Android).</li>
+        <li><strong>Material Design</strong> e <strong>iOS Human Guidelines</strong>.</li>
+        <li>Dark Mode, animações fluidas.</li>
+        <li><strong>Realidade Aumentada (AR), VR e interfaces por voz.</strong></li>
+        <li>Assistentes inteligentes e interfaces adaptativas.</li>
+    </ul>
+</section>
+
+<!-- =========================================================== -->
+<!-- FIM DA SEÇÃO HISTÓRICA -->
+<!-- =========================================================== -->
+
+<!-- SLIDE 9 -->
+<section class="slide">
+    <h2>Exemplos do dia a dia</h2>
+    <ul>
+        <li>Windows, macOS, Linux Gnome/KDE</li>
+        <li>Aplicativos Android e iOS</li>
+        <li>Navegadores: Chrome, Firefox, Safari</li>
+        <li>Softwares como Word, Photoshop, VSCode</li>
+    </ul>
+</section>
+
+<!-- SLIDE 10 -->
+<section class="slide">
+    <h2>Por que GUIs são importantes?</h2>
+    <ul>
+        <li>Tornam o software acessível a qualquer pessoa.</li>
+        <li>Reduzem erros e aumentam produtividade.</li>
+        <li>Melhoram a experiência do usuário (UX).</li>
+        <li>São essenciais no desenvolvimento de aplicações modernas.</li>
+    </ul>
+</section>
+
+<!-- SLIDE 11 -->
+<section class="slide">
+    <h2>Componentes básicos</h2>
+    <ul>
+        <li>Botões (Buttons)</li>
+        <li>Janelas (Windows)</li>
+        <li>Caixas de texto (Inputs)</li>
+        <li>Menus, barras de ferramentas</li>
+        <li>Checkboxes, radiobuttons e sliders</li>
+    </ul>
+</section>
+
+<!-- SLIDE 12 -->
+<section class="slide">
+    <h2>Eventos e interação</h2>
+    <p>GUIs funcionam por meio de um sistema de eventos:</p>
+    <ul>
+        <li>Clique do mouse</li>
+        <li>Pressionar teclas</li>
+        <li>Movimentação do ponteiro</li>
+        <li>Entrada de texto</li>
+        <li>Redimensionamento da janela</li>
+    </ul>
+</section>
+
+<!-- SLIDE 13 -->
+<section class="slide">
+    <h2>Event Loop</h2>
+    <p>
+        O <strong>event loop</strong> é o laço principal da GUI:
+    </p>
+    <ul>
+        <li>Escuta eventos do usuário</li>
+        <li>Identifica o tipo do evento</li>
+        <li>Executa a função correspondente</li>
+    </ul>
+</section>
+
+<!-- SLIDE 14 -->
+<section class="slide">
+    <h2>Arquitetura interna de GUIs</h2>
+    <ul>
+        <li>MVC — Model-View-Controller</li>
+        <li>MVVM — Model-View-ViewModel</li>
+        <li>Observer Pattern para eventos</li>
+    </ul>
+</section>
+
+<!-- SLIDE 15 -->
+<section class="slide">
+    <h2>Exemplo prático em Python (Tkinter)</h2>
+<pre>
+import tkinter as tk
+
+janela = tk.Tk()
+janela.title("Minha Primeira GUI")
+
+def clique():
+    label.config(text="Botão clicado!")
+
+label = tk.Label(janela, text="Hello GUI!")
+label.pack()
+
+botao = tk.Button(janela, text="Clique aqui", command=clique)
+botao.pack()
+
+janela.mainloop()
+</pre>
+</section>
+
+<!-- SLIDE 16 -->
+<section class="slide">
+    <h2>Boas práticas de design</h2>
+    <ul>
+        <li>Mantenha a interface simples e limpa</li>
+        <li>Use alinhamento consistente</li>
+        <li>Evite excesso de cores ou elementos</li>
+        <li>Garanta acessibilidade: contraste, fonte, navegação</li>
+        <li>Dê feedback visual ao usuário</li>
+    </ul>
+</section>
+
+<!-- SLIDE 17 -->
+<section class="slide">
+    <h2>Conclusão</h2>
+    <p>
+        Interfaces gráficas evoluíram por mais de 60 anos e hoje são fundamentais na computação.  
+        Elas combinam programação, design, experiência do usuário e inovações em interação humano-computador.
+    </p>
+</section>
+
+<div class="footer">
+    Apresentação criada para a disciplina de Introdução à Computação — © 2025
+</div>
+
+</body>
+</html>
